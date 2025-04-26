@@ -22,43 +22,49 @@ model AuthUser {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  user       User?
-  history    LoginHistory[]
-  validation Validation[]
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+
+  loginHistory LoginHistory[]
+  validations  Validation[]
+}
+
+model User {
+  id              String  @id @default(uuid())
+  username        String  @unique
+  email           String  @unique
+  profileImageUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authUser AuthUser?
 }
 
 model LoginHistory {
   id         String   @id @default(uuid())
+  authUserId String
   authUser   AuthUser @relation(fields: [authUserId], references: [id])
-  authUserId String   @unique
-  ipAddress  String
-  userAgent  String
-  attempt    String
+
+  ipAddress String
+  userAgent String
+  attempt   String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Validation {
-  id         String    @id @default(uuid())
-  authUser   AuthUser  @relation(fields: [authUserId], references: [id])
-  authUserId String    @unique
-  code       String
-  type       String
-  otpExpiry  DateTime? // expiry time for OTP
-  isUsed     Boolean   @default(false)
-  isExpired  Boolean   @default(false)
+  id         String   @id @default(uuid())
+  authUserId String
+  authUser   AuthUser @relation(fields: [authUserId], references: [id])
+
+  code      String
+  type      String
+  otpExpiry DateTime? // expiry time for OTP
+  isUsed    Boolean   @default(false)
+  isExpired Boolean   @default(false)
 
   issuedAt   DateTime  @default(now())
   verifiedAt DateTime?
-}
-
-model User {
-  id              String   @id @default(uuid())
-  authUser        AuthUser @relation(fields: [authUserId], references: [id])
-  authUserId      String   @unique
-  profileImageUrl String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
