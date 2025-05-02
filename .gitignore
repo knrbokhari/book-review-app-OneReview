@@ -1,0 +1,39 @@
+# Node dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Lock files
+package-lock.json
+backend/package-lock.json
+frontend/package-lock.json
+
+# Environment files
+.env
+backend/.env
+frontend/.env
+
+# SSL certificates
+backend/ssl/key.pem
+backend/ssl/cert.pem
+
+# Logs and temp files
+*.log
+*.tmp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# VSCode settings (optional)
+.vscode/
+
+#logs
+/backend/error-logs/
+
+
+/backend/audit-logs/
+
+uploads/
+note.txt
+

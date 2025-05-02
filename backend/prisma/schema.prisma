@@ -7,13 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Actions {
+  Read
+  Write
+  Update
+  Delete
+}
+
 model AuthUser {
   id       String @id @default(uuid())
   username String @unique
   email    String @unique
   password String // hashed password
 
-  role       String
+  role       String  @default("user")
   isVerified Boolean @default(false)
   isActive   Boolean @default(true)
   isDeleted  Boolean @default(false)
@@ -30,15 +37,22 @@ model AuthUser {
 }
 
 model User {
-  id              String  @id @default(uuid())
-  username        String  @unique
-  email           String  @unique
+  id              String   @id @default(uuid())
+  username        String   @unique
+  email           String   @unique
   profileImageUrl String?
+  bio             String?
+  favoriteGenres  String[] @default([])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   authUser AuthUser?
+  role     Roles?    @relation(fields: [role_id], references: [id])
+  role_id  Int?
+  Review   Review[]
+  Comment  Comment[]
+  Like     Like[]
 }
 
 model LoginHistory {
@@ -67,4 +81,170 @@ model Validation {
 
   issuedAt   DateTime  @default(now())
   verifiedAt DateTime?
+}
+
+model Roles {
+  id          Int           @id @default(autoincrement())
+  name        String
+  slug        String        @unique
+  users       User[]
+  permissions Permissions[]
+}
+
+model Resources {
+  id          Int           @id @default(autoincrement())
+  name        String
+  slug        String        @unique
+  permissions Permissions[]
+}
+
+model Permissions {
+  role        Roles     @relation(fields: [role_id], references: [id])
+  role_id     Int
+  resource    Resources @relation(fields: [resource_id], references: [id])
+  resource_id Int
+  access      Boolean   @default(false)
+  actions     Actions[]
+
+  @@id([role_id, resource_id])
+}
+
+model Categories {
+  id         Int      @id @default(autoincrement())
+  name       String
+  slug       String   @unique
+  image      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  deleted_at String?
+  product    Book[]
+
+  @@unique([slug, id])
+  @@index([id, slug])
+}
+
+model Publication {
+  id                   Int      @id @default(autoincrement())
+  name                 String
+  image                String?
+  cover_image          String?
+  slug                 String   @unique
+  language             String   @default("en")
+  description          String?
+  website              String?
+  socials              Json?
+  products_count       Int      @default(0)
+  translated_languages String[]
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  product              Book[]
+
+  @@unique([slug, id])
+  @@index([id, slug])
+}
+
+model Authors {
+  id             Int      @id @default(autoincrement())
+  name           String
+  image          String?
+  cover_image    String?
+  slug           String   @unique
+  bio            String?
+  quote          String?
+  born           String?
+  death          String?
+  products_count Int      @default(0)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  books          Book[]
+
+  @@unique([slug, id])
+  @@index([id, slug, name])
+}
+
+model Book {
+  id              Int          @id @default(autoincrement())
+  name            String
+  subtitle        String?
+  slug            String       @unique
+  book_type       String?
+  authors         Authors[]
+  publication     Publication? @relation(fields: [publicationId], references: [id])
+  publicationId   Int?
+  status          String?      @default("draft")
+  tags            String[]
+  page            Int?
+  isbn            String?
+  viewWeight      Float        @default(0)
+  publicationDate DateTime?
+  language        String       @default("English")
+  country         String?
+  currentEdition  String?
+  price           Float
+  categories      Categories[]
+  summary         String?
+  description     String?
+  image           String?
+  gallery         String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+  ratings         Float        @default(0)
+  totalReviews    Int          @default(0)
+  reviews         Review[]     @relation("BookReviews")
+
+  @@index([id, slug, price, status, createdAt])
+  @@map("Products")
+}
+
+model Review {
+  id       String    @id @default(uuid())
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
+  bookId   Int
+  book     Book      @relation("BookReviews", fields: [bookId], references: [id])
+  rating   Int       @default(5)
+  title    String
+  content  String
+  isPublic Boolean   @default(true)
+  likes    Like[]
+  comments Comment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
+}
+
+model Comment {
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  reviewId String?
+  review   Review? @relation(fields: [reviewId], references: [id])
+
+  parentId String?
+  parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies  Comment[] @relation("CommentReplies")
+
+  content String
+  likes   Like[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  reviewId  String?
+  review    Review?  @relation(fields: [reviewId], references: [id])
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, reviewId, commentId])
 }
