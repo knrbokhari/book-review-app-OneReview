@@ -8,6 +8,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { PublicationsModule } from './publications/publications.module';
 import { AuthorsModule } from './authors/authors.module';
 import { BooksModule } from './books/books.module';
+import { CommentsModule } from './comments/comments.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { BooksModule } from './books/books.module';
     PublicationsModule,
     AuthorsModule,
     BooksModule,
+    CommentsModule,
+    ReviewModule,
   ],
   controllers: [],
   providers: [PrismaService],
