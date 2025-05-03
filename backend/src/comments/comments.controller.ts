@@ -14,8 +14,8 @@ import {
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 // import { Request } from 'express';
-import { CommentService } from './comments.service';
 import { AuthGuard } from '@nestjs/passport';
+import { CommentService } from './comments.service';
 
 @Controller('comments')
 export class CommentController {
