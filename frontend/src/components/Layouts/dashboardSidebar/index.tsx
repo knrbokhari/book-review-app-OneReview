@@ -1,17 +1,16 @@
 "use client";
 
-import { Logo } from "@/components/logo";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { NAV_DATA } from "./data";
-import { ArrowLeftIcon, ChevronUp } from "./icons";
-import { MenuItem } from "./menu-item";
-import { useSidebarContext } from "./sidebar-context";
 import Image from "next/image";
+import { useSidebarContext } from "../sidebar/sidebar-context";
+import { NAV_DASHBOARD } from "../sidebar/data";
+import { ArrowLeftIcon, ChevronUp } from "../sidebar/icons";
+import { MenuItem } from "../sidebar/menu-item";
 
-export function Sidebar() {
+export function DashboardSidebar() {
   const pathname = usePathname();
   const { setIsOpen, isOpen, isMobile, toggleSidebar } = useSidebarContext();
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
@@ -27,9 +26,9 @@ export function Sidebar() {
 
   useEffect(() => {
     // Keep collapsible open, when it's subpage is active
-    NAV_DATA.some((section) => {
+    NAV_DASHBOARD.some((section) => {
       return section.items.some((item) => {
-        return item.items.some((subItem: { url: string; title: string }) => {
+        return item?.items.some((subItem: { url?: string }) => {
           if (subItem.url === pathname) {
             if (!expandedItems.includes(item.title)) {
               toggleExpanded(item.title);
@@ -94,7 +93,7 @@ export function Sidebar() {
 
           {/* Navigation */}
           <div className="custom-scrollbar mt-6 flex-1 overflow-y-auto pr-3 min-[850px]:mt-10">
-            {NAV_DATA.map((section) => (
+            {NAV_DASHBOARD.map((section) => (
               <div key={section.label} className="mb-6">
                 <h2 className="mb-5 text-sm font-medium text-dark-4 dark:text-dark-6">
                   {section.label}
@@ -104,13 +103,13 @@ export function Sidebar() {
                   <ul className="space-y-2">
                     {section.items.map(
                       (item: {
-                        icon: any;
                         title: string;
+                        items?: any[];
+                        icon?: any;
                         url?: string;
-                        items: { title: string; url: string }[];
                       }) => (
                         <li key={item.title}>
-                          {item.items.length ? (
+                          {item?.items?.length ? (
                             <div>
                               <MenuItem
                                 isActive={item.items.some(
@@ -134,30 +133,6 @@ export function Sidebar() {
                                   aria-hidden="true"
                                 />
                               </MenuItem>
-
-                              {expandedItems.includes(item.title) && (
-                                <ul
-                                  className="ml-9 mr-0 space-y-1.5 pb-[15px] pr-0 pt-2"
-                                  role="menu"
-                                >
-                                  {item.items.map(
-                                    (subItem: {
-                                      title: string;
-                                      url: string;
-                                    }) => (
-                                      <li key={subItem.title} role="none">
-                                        <MenuItem
-                                          as="link"
-                                          href={subItem.url}
-                                          isActive={pathname === subItem.url}
-                                        >
-                                          <span>{subItem.title}</span>
-                                        </MenuItem>
-                                      </li>
-                                    ),
-                                  )}
-                                </ul>
-                              )}
                             </div>
                           ) : (
                             (() => {
@@ -165,8 +140,8 @@ export function Sidebar() {
                                 "url" in item
                                   ? item.url + ""
                                   : "/" +
-                                    item.title
-                                      .toLowerCase()
+                                    item?.title
+                                      ?.toLowerCase()
                                       .split(" ")
                                       .join("-");
 
