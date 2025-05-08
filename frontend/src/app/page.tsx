@@ -1,226 +1,496 @@
 "use client";
 
+import BookCarousel from "@/components/Book/BookCarousel";
+import NewsletterSignup from "@/components/Home/Newsletter";
+import BookReviewHero from "@/components/ui/HeroSections";
 import React, { useState } from "react";
+
+export const books = [
+  {
+    title: "The Midnight Library",
+    author: "Matt Haig",
+    publisher: "Viking",
+    rating: 4.5,
+    image: "https://images.example.com/the-midnight-library.jpg",
+    price: "$16.99",
+    description:
+      "Between life and death, there is a library, and within that library, the shelves go on forever. Every book provides a chance to try another life you could have lived.",
+  },
+  {
+    title: "Atomic Habits",
+    author: "James Clear",
+    publisher: "Avery",
+    rating: 4.8,
+    image: "https://images.example.com/atomic-habits.jpg",
+    price: "$11.98",
+    description: "An Easy & Proven Way to Build Good Habits & Break Bad Ones.",
+  },
+  {
+    title: "The 7 Habits of Highly Effective People",
+    author: "Stephen R. Covey",
+    publisher: "Free Press",
+    rating: 4.6,
+    image: "https://images.example.com/7-habits.jpg",
+    price: "$14.99",
+    description: "Powerful Lessons in Personal Change.",
+  },
+  {
+    title: "How to Win Friends and Influence People",
+    author: "Dale Carnegie",
+    publisher: "Simon & Schuster",
+    rating: 4.7,
+    image: "https://images.example.com/how-to-win-friends.jpg",
+    price: "$10.99",
+    description: "The only book you need to lead you to success.",
+  },
+  {
+    title: "The Power of Now",
+    author: "Eckhart Tolle",
+    publisher: "New World Library",
+    rating: 4.6,
+    image: "https://images.example.com/power-of-now.jpg",
+    price: "$9.99",
+    description: "A Guide to Spiritual Enlightenment.",
+  },
+  {
+    title: "The Subtle Art of Not Giving a F*ck",
+    author: "Mark Manson",
+    publisher: "Harper",
+    rating: 4.5,
+    image: "https://images.example.com/subtle-art.jpg",
+    price: "$12.99",
+    description: "A Counterintuitive Approach to Living a Good Life.",
+  },
+  {
+    title: "Think and Grow Rich",
+    author: "Napoleon Hill",
+    publisher: "The Ralston Society",
+    rating: 4.4,
+    image: "https://images.example.com/think-and-grow-rich.jpg",
+    price: "$7.99",
+    description:
+      "The Landmark Bestseller Now Revised and Updated for the 21st Century.",
+  },
+  {
+    title: "You Are a Badass",
+    author: "Jen Sincero",
+    publisher: "Running Press",
+    rating: 4.5,
+    image: "https://images.example.com/you-are-a-badass.jpg",
+    price: "$13.99",
+    description:
+      "How to Stop Doubting Your Greatness and Start Living an Awesome Life.",
+  },
+  {
+    title: "Awaken the Giant Within",
+    author: "Tony Robbins",
+    publisher: "Free Press",
+    rating: 4.6,
+    image: "https://images.example.com/awaken-the-giant.jpg",
+    price: "$15.99",
+    description:
+      "How to Take Immediate Control of Your Mental, Emotional, Physical and Financial Destiny!",
+  },
+  {
+    title: "The Four Agreements",
+    author: "Don Miguel Ruiz",
+    publisher: "Amber-Allen Publishing",
+    rating: 4.7,
+    image: "https://images.example.com/four-agreements.jpg",
+    price: "$8.99",
+    description: "A Practical Guide to Personal Freedom.",
+  },
+  {
+    title: "Daring Greatly",
+    author: "Brené Brown",
+    publisher: "Gotham Books",
+    rating: 4.6,
+    image: "https://images.example.com/daring-greatly.jpg",
+    price: "$14.99",
+    description:
+      "How the Courage to Be Vulnerable Transforms the Way We Live, Love, Parent, and Lead.",
+  },
+  {
+    title: "Mindset",
+    author: "Carol S. Dweck",
+    publisher: "Ballantine Books",
+    rating: 4.5,
+    image: "https://images.example.com/mindset.jpg",
+    price: "$10.99",
+    description: "The New Psychology of Success.",
+  },
+  {
+    title: "The Power of Habit",
+    author: "Charles Duhigg",
+    publisher: "Random House",
+    rating: 4.6,
+    image: "https://images.example.com/power-of-habit.jpg",
+    price: "$11.99",
+    description: "Why We Do What We Do in Life and Business.",
+  },
+  {
+    title: "Grit",
+    author: "Angela Duckworth",
+    publisher: "Scribner",
+    rating: 4.5,
+    image: "https://images.example.com/grit.jpg",
+    price: "$13.99",
+    description: "The Power of Passion and Perseverance.",
+  },
+  {
+    title: "Drive",
+    author: "Daniel H. Pink",
+    publisher: "Riverhead Books",
+    rating: 4.4,
+    image: "https://images.example.com/drive.jpg",
+    price: "$12.99",
+    description: "The Surprising Truth About What Motivates Us.",
+  },
+  {
+    title: "Deep Work",
+    author: "Cal Newport",
+    publisher: "Grand Central Publishing",
+    rating: 4.6,
+    image: "https://images.example.com/deep-work.jpg",
+    price: "$14.99",
+    description: "Rules for Focused Success in a Distracted World.",
+  },
+  {
+    title: "Can't Hurt Me",
+    author: "David Goggins",
+    publisher: "Lioncrest Publishing",
+    rating: 4.8,
+    image: "https://images.example.com/cant-hurt-me.jpg",
+    price: "$17.99",
+    description: "Master Your Mind and Defy the Odds.",
+  },
+  {
+    title: "The Miracle Morning",
+    author: "Hal Elrod",
+    publisher: "Hal Elrod",
+    rating: 4.5,
+    image: "https://images.example.com/miracle-morning.jpg",
+    price: "$12.99",
+    description:
+      "The Not-So-Obvious Secret Guaranteed to Transform Your Life (Before 8AM).",
+  },
+  {
+    title: "The Life-Changing Magic of Tidying Up",
+    author: "Marie Kondo",
+    publisher: "Ten Speed Press",
+    rating: 4.6,
+    image: "https://images.example.com/life-changing-magic.jpg",
+    price: "$9.99",
+    description: "The Japanese Art of Decluttering and Organizing.",
+  },
+  {
+    title: "Essentialism",
+    author: "Greg McKeown",
+    publisher: "Crown Business",
+    rating: 4.5,
+    image: "https://images.example.com/essentialism.jpg",
+    price: "$13.99",
+    description: "The Disciplined Pursuit of Less.",
+  },
+  {
+    title: "The Untethered Soul",
+    author: "Michael A. Singer",
+    publisher: "New Harbinger Publications",
+    rating: 4.7,
+    image: "https://images.example.com/untethered-soul.jpg",
+    price: "$10.99",
+    description: "The Journey Beyond Yourself.",
+  },
+  {
+    title: "The Gifts of Imperfection",
+    author: "Brené Brown",
+    publisher: "Hazelden Publishing",
+    rating: 4.6,
+    image: "https://images.example.com/gifts-of-imperfection.jpg",
+    price: "$11.99",
+    description:
+      "Let Go of Who You Think You're Supposed to Be and Embrace Who You Are.",
+  },
+  {
+    title: "Start with Why",
+    author: "Simon Sinek",
+    publisher: "Portfolio",
+    rating: 4.5,
+    image: "https://images.example.com/start-with-why.jpg",
+    price: "$14.99",
+    description: "How Great Leaders Inspire Everyone to Take Action.",
+  },
+  {
+    title: "The 5 Second Rule",
+    author: "Mel Robbins",
+    publisher: "Savio Republic",
+    rating: 4.4,
+    image: "https://images.example.com/5-second-rule.jpg",
+    price: "$13.99",
+    description:
+      "Transform your Life, Work, and Confidence with Everyday Courage.",
+  },
+  {
+    title: "The Magic of Thinking Big",
+    author: "David J. Schwartz",
+    publisher: "Simon & Schuster",
+    rating: 4.6,
+    image: "https://images.example.com/magic-of-thinking-big.jpg",
+    price: "$10.99",
+    description:
+      "Acquire the secrets of success... achieve everything you've always wanted.",
+  },
+  {
+    title: "The Success Principles",
+    author: "Jack Canfield",
+    publisher: "HarperCollins",
+    rating: 4.5,
+    image: "https://images.example.com/success-principles.jpg",
+    price: "$15.99",
+    description: "How to Get from Where You Are to Where You Want to Be.",
+  },
+  {
+    title: "The War of Art",
+    author: "Steven Pressfield",
+    publisher: "Black Irish Entertainment",
+    rating: 4.7,
+    image: "https://images.example.com/the-war-of-art.jpg",
+    price: "$13.49",
+    description:
+      "Break Through the Blocks and Win Your Inner Creative Battles.",
+  },
+  {
+    title: "Tools of Titans",
+    author: "Tim Ferriss",
+    publisher: "Houghton Mifflin Harcourt",
+    rating: 4.6,
+    image: "https://images.example.com/tools-of-titans.jpg",
+    price: "$18.99",
+    description:
+      "The Tactics, Routines, and Habits of Billionaires, Icons, and World-Class Performers.",
+  },
+  {
+    title: "Ego is the Enemy",
+    author: "Ryan Holiday",
+    publisher: "Portfolio",
+    rating: 4.6,
+    image: "https://images.example.com/ego-is-the-enemy.jpg",
+    price: "$11.99",
+    description: "The fight against ego that everyone must face.",
+  },
+  {
+    title: "Stillness Is the Key",
+    author: "Ryan Holiday",
+    publisher: "Portfolio",
+    rating: 4.7,
+    image: "https://images.example.com/stillness-is-the-key.jpg",
+    price: "$13.99",
+    description:
+      "Unlock the ancient art of stillness to become more focused and grounded.",
+  },
+  {
+    title: "Discipline Equals Freedom",
+    author: "Jocko Willink",
+    publisher: "St. Martin's Press",
+    rating: 4.8,
+    image: "https://images.example.com/discipline-equals-freedom.jpg",
+    price: "$17.49",
+    description: "Field Manual for mental and physical toughness.",
+  },
+  {
+    title: "The Alchemist",
+    author: "Paulo Coelho",
+    publisher: "HarperOne",
+    rating: 4.7,
+    image: "https://images.example.com/the-alchemist.jpg",
+    price: "$10.99",
+    description: "A magical fable about following your dreams.",
+  },
+  {
+    title: "Man's Search for Meaning",
+    author: "Viktor E. Frankl",
+    publisher: "Beacon Press",
+    rating: 4.8,
+    image: "https://images.example.com/mans-search-for-meaning.jpg",
+    price: "$9.99",
+    description:
+      "A Holocaust survivor’s guide to discovering purpose through suffering.",
+  },
+  {
+    title: "Who Moved My Cheese?",
+    author: "Spencer Johnson",
+    publisher: "Putnam Adult",
+    rating: 4.4,
+    image: "https://images.example.com/who-moved-my-cheese.jpg",
+    price: "$9.49",
+    description:
+      "An amazing way to deal with change in your work and in your life.",
+  },
+  {
+    title: "Unlimited Power",
+    author: "Tony Robbins",
+    publisher: "Free Press",
+    rating: 4.6,
+    image: "https://images.example.com/unlimited-power.jpg",
+    price: "$13.99",
+    description: "The new science of personal achievement.",
+  },
+  {
+    title: "Make Your Bed",
+    author: "Admiral William H. McRaven",
+    publisher: "Grand Central Publishing",
+    rating: 4.7,
+    image: "https://images.example.com/make-your-bed.jpg",
+    price: "$11.99",
+    description:
+      "Little things that can change your life... and maybe the world.",
+  },
+  {
+    title: "Principles",
+    author: "Ray Dalio",
+    publisher: "Simon & Schuster",
+    rating: 4.5,
+    image: "https://images.example.com/principles.jpg",
+    price: "$19.99",
+    description:
+      "Life and work principles from the legendary investor and entrepreneur.",
+  },
+  {
+    title: "Born to Win",
+    author: "Zig Ziglar",
+    publisher: "Revell",
+    rating: 4.6,
+    image: "https://images.example.com/born-to-win.jpg",
+    price: "$12.99",
+    description: "Find your success code and claim your destiny.",
+  },
+  {
+    title: "Your Best Year Ever",
+    author: "Michael Hyatt",
+    publisher: "Baker Books",
+    rating: 4.5,
+    image: "https://images.example.com/your-best-year-ever.jpg",
+    price: "$13.99",
+    description: "A 5-Step Plan for Achieving Your Most Important Goals.",
+  },
+  {
+    title: "The Confidence Code",
+    author: "Katty Kay & Claire Shipman",
+    publisher: "HarperBusiness",
+    rating: 4.4,
+    image: "https://images.example.com/the-confidence-code.jpg",
+    price: "$11.99",
+    description:
+      "The Science and Art of Self-Assurance—What Women Should Know.",
+  },
+  {
+    title: "Boundaries",
+    author: "Dr. Henry Cloud & Dr. John Townsend",
+    publisher: "Zondervan",
+    rating: 4.7,
+    image: "https://images.example.com/boundaries.jpg",
+    price: "$13.49",
+    description: "When to Say Yes, How to Say No to Take Control of Your Life.",
+  },
+  {
+    title: "Think Like a Monk",
+    author: "Jay Shetty",
+    publisher: "Simon & Schuster",
+    rating: 4.6,
+    image: "https://images.example.com/think-like-a-monk.jpg",
+    price: "$14.99",
+    description: "Train your mind for peace and purpose every day.",
+  },
+  {
+    title: "Get Out of Your Head",
+    author: "Jennie Allen",
+    publisher: "WaterBrook",
+    rating: 4.7,
+    image: "https://images.example.com/get-out-of-your-head.jpg",
+    price: "$12.99",
+    description: "Stopping the spiral of toxic thoughts.",
+  },
+  {
+    title: "Outliers",
+    author: "Malcolm Gladwell",
+    publisher: "Little, Brown and Company",
+    rating: 4.5,
+    image: "https://images.example.com/outliers.jpg",
+    price: "$13.49",
+    description: "The Story of Success.",
+  },
+  {
+    title: "Switch",
+    author: "Chip Heath & Dan Heath",
+    publisher: "Crown Business",
+    rating: 4.5,
+    image: "https://images.example.com/switch.jpg",
+    price: "$14.49",
+    description: "How to Change Things When Change Is Hard.",
+  },
+  {
+    title: "A New Earth",
+    author: "Eckhart Tolle",
+    publisher: "Plume",
+    rating: 4.6,
+    image: "https://images.example.com/a-new-earth.jpg",
+    price: "$10.99",
+    description: "Awakening to Your Life’s Purpose.",
+  },
+];
 
 const page = () => {
   const [filter, setFilter] = useState("all");
 
-  const books = [
-    {
-      id: 1,
-      title: "The Midnight Library",
-      author: "Matt Haig",
-      cover: "/api/placeholder/200/300",
-      rating: 4.5,
-      genre: "fiction",
-      snippet:
-        "A dazzling novel about all the choices that go into a life well lived.",
-    },
-    {
-      id: 2,
-      title: "Atomic Habits",
-      author: "James Clear",
-      cover: "/api/placeholder/200/300",
-      rating: 5,
-      genre: "non-fiction",
-      snippet:
-        "Tiny changes, remarkable results: an easy and proven way to build good habits and break bad ones.",
-    },
-    {
-      id: 3,
-      title: "Project Hail Mary",
-      author: "Andy Weir",
-      cover: "/api/placeholder/200/300",
-      rating: 4.8,
-      genre: "sci-fi",
-      snippet:
-        "A lone astronaut must save the earth from disaster in this incredible new science-based thriller.",
-    },
-    {
-      id: 4,
-      title: "Educated",
-      author: "Tara Westover",
-      cover: "/api/placeholder/200/300",
-      rating: 4.7,
-      genre: "memoir",
-      snippet:
-        "An unforgettable memoir about a young girl who kept out of school, leaves her survivalist family and goes on to earn a PhD from Cambridge University.",
-    },
-    {
-      id: 5,
-      title: "The Thursday Murder Club",
-      author: "Richard Osman",
-      cover: "/api/placeholder/200/300",
-      rating: 4.2,
-      genre: "mystery",
-      snippet:
-        "Four septuagenarians with a few tricks up their sleeves, a female cop with her first big case, and a brutal murder.",
-    },
-    {
-      id: 6,
-      title: "Klara and the Sun",
-      author: "Kazuo Ishiguro",
-      cover: "/api/placeholder/200/300",
-      rating: 4.3,
-      genre: "fiction",
-      snippet:
-        "A story of love, sacrifice, and what it means to be human, told from the perspective of an Artificial Friend.",
-    },
-  ];
-
-  const featuredReview = {
-    title: "The Midnight Library",
-    author: "Matt Haig",
-    cover: "/api/placeholder/300/450",
-    rating: 4.5,
-    reviewText:
-      "In 'The Midnight Library,' Matt Haig delivers a captivating narrative that explores the infinite possibilities of life through the eyes of Nora Seed. When Nora finds herself in a library between life and death, she gets to try the different versions of her life that could have been. This novel beautifully examines regret, hope, and the ripple effects of our choices with compassion and insight. Haig's prose is accessible yet profound, making complex philosophical concepts digestible and emotionally resonant. A must-read for anyone who has ever wondered 'what if?'",
-    reviewer: "Emma Thompson",
-    date: "April 15, 2025",
-  };
-
-  const filteredBooks =
-    filter === "all" ? books : books.filter((book) => book.genre === filter);
-
   return (
     <div>
-      <section className="bg-blue-900 py-20 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="mb-4 text-4xl font-bold">Find Your Next Great Read</h1>
-          <p className="mb-8 text-xl">
-            Expert reviews and recommendations for every reader
-          </p>
-          <div className="relative mx-auto max-w-md">
-            <input
-              type="text"
-              placeholder="Search for books or authors..."
-              className="w-full rounded-lg px-4 py-3 text-gray-800 focus:outline-none"
-            />
-            <button className="absolute right-0 top-0 rounded-r-lg bg-blue-600 px-6 py-3 text-white">
-              Search
-            </button>
-          </div>
-        </div>
-      </section>
+      <BookReviewHero />
 
-      {/* Featured Review */}
-      <section className="bg-white py-12">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-8 text-center text-3xl font-bold">
-            Featured Review
-          </h2>
-          <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-            <div className="lg:flex">
-              <div className="lg:w-1/3">
-                <img
-                  src={featuredReview.cover}
-                  alt={`Cover of ${featuredReview.title}`}
-                  className="h-full w-full object-cover"
-                />
-              </div>
-              <div className="p-8 lg:w-2/3">
-                <div className="mb-4 flex items-start justify-between">
-                  <div>
-                    <h3 className="text-2xl font-bold">
-                      {featuredReview.title}
-                    </h3>
-                    <p className="text-gray-600">by {featuredReview.author}</p>
-                  </div>
-                  <div className="rounded-full bg-yellow-400 px-3 py-1 text-lg font-bold text-yellow-800">
-                    {featuredReview.rating}/5
-                  </div>
-                </div>
-                <p className="mb-6 leading-relaxed text-gray-800">
-                  {featuredReview.reviewText}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="text-gray-600">
-                    <span>Reviewed by {featuredReview.reviewer}</span>
-                    <span className="mx-2">•</span>
-                    <span>{featuredReview.date}</span>
-                  </div>
-                  <button className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white">
-                    Read Full Review
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="container mx-auto mt-10">
+        <BookCarousel
+          isLoading={false}
+          title="Trending Books"
+          products={books.slice(0, 20)}
+          error={undefined}
+        />
 
-      {/* Latest Reviews */}
-      <section className="bg-gray-100 py-12">
-        <div className="container mx-auto px-4">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-3xl font-bold">Latest Reviews</h2>
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setFilter("all")}
-                className={`rounded px-4 py-2 ${filter === "all" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setFilter("fiction")}
-                className={`rounded px-4 py-2 ${filter === "fiction" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-              >
-                Fiction
-              </button>
-              <button
-                onClick={() => setFilter("non-fiction")}
-                className={`rounded px-4 py-2 ${filter === "non-fiction" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-              >
-                Non-Fiction
-              </button>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredBooks.map((book) => (
-              <div className="overflow-hidden rounded-lg bg-white shadow-md transition-transform hover:scale-105">
-                <img
-                  src={book.cover}
-                  alt={`Cover of ${book.title}`}
-                  className="h-64 w-full object-cover"
-                />
-                <div className="p-6">
-                  <div className="mb-2 flex items-start justify-between">
-                    <h3 className="text-xl font-bold">{book.title}</h3>
-                    <div className="rounded-full bg-yellow-400 px-2 py-1 text-sm font-bold text-yellow-800">
-                      {book.rating}/5
-                    </div>
-                  </div>
-                  <p className="mb-4 text-gray-600">by {book.author}</p>
-                  <p className="mb-4 text-gray-700">{book.snippet}</p>
-                  <button className="w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white">
-                    Read Review
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        <BookCarousel
+          isLoading={false}
+          title="New Arrival Books"
+          products={books.slice(15, 30)}
+          error={undefined}
+        />
 
-      {/* Newsletter */}
-      <section className="bg-blue-900 py-12 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-4 text-3xl font-bold">Stay Updated</h2>
-          <p className="mb-6">
-            Subscribe to our newsletter for weekly book recommendations
-          </p>
-          <div className="mx-auto flex max-w-md">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-grow rounded-l-lg px-4 py-3 text-gray-800 focus:outline-none"
-            />
-            <button className="rounded-r-lg bg-blue-600 px-6 py-3 font-semibold text-white">
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
+        <BookCarousel
+          isLoading={false}
+          title="Popular Genres"
+          products={[]}
+          error={undefined}
+        />
+
+        {/* <BookCarousel
+          isLoading={false}
+          title="Popular Genres"
+          products={[]}
+          error={undefined}
+        /> */}
+
+        <BookCarousel
+          isLoading={false}
+          title="Join a Reading Club"
+          products={[]}
+          error={undefined}
+        />
+
+        <BookCarousel
+          isLoading={false}
+          title="What Readers Are Saying"
+          products={[]}
+          error={undefined}
+        />
+
+        <NewsletterSignup />
+      </div>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { books } from "@/app/page";
 import BookCarousel from "@/components/Book/BookCarousel";
 import BookDetails from "@/components/Book/BookDetails";
 import AverageRatings from "@/components/reviews/average-ratings";
@@ -23,7 +24,7 @@ const page = () => {
     },
   };
   return (
-    <div>
+    <div className="container mx-auto">
       <BookDetails />
 
       <BookCarousel isLoading={false} title="Related Books" products={[]} />

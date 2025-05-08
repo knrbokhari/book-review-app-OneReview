@@ -50,7 +50,7 @@ const page = () => {
                 className="border-[#eee] dark:border-dark-3"
               >
                 <TableCell className="flex min-w-fit items-center gap-3 pl-5 sm:pl-6 xl:pl-7.5">
-                  <Image
+                  {/* <Image
                     src={item.image}
                     className="aspect-[6/5] w-15 rounded-[5px] object-cover"
                     width={60}
@@ -58,24 +58,46 @@ const page = () => {
                     alt={"Image for " + item.name}
                     role="presentation"
                   />
-                  <div>{item.name}</div>
+                  <div>{item.name}</div> */}
+                  <Image
+                    src="/images/home/book1.jpg" //{item.image}
+                    className="aspect-[4/6] w-15 rounded-[5px] object-cover"
+                    width={40}
+                    height={50}
+                    alt={"Image for " + item.name}
+                    role="presentation"
+                  />
+                  <div>Atomic Habits</div>
                 </TableCell>
 
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">{item.ratings}</h5>
-                </TableCell>
-                <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.totalReviews}
+                    {/* {item.ratings} */}
+                    4.8
                   </h5>
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.addedDate}
+                    {/* {item.totalReviews} */} 100+
                   </h5>
                 </TableCell>
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">{item.status}</h5>
+                  <h5 className="text-dark dark:text-white">
+                    {/* {item.addedDate} */} May 7, 2025
+                  </h5>
+                </TableCell>
+                <TableCell>
+                  <h5 className="text-dark dark:text-white">
+                    {/* {item.status} */}
+
+                    <select name="" id="">
+                      <option value="Want to Read">Want to Read</option>
+                      <option value="Currently Reading">
+                        Currently Reading
+                      </option>
+                      <option value="Completed">Completed</option>
+                    </select>
+                  </h5>
                 </TableCell>
                 <TableCell className="xl:pr-7.5">
                   <div className="flex items-center justify-end gap-x-3.5">

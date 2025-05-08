@@ -26,9 +26,9 @@ const NewSectionBlock: React.FC<SectionProps> = ({
   return (
     <div className={cn("pb-8", className)}>
       {title && (
-        <div className="border-border-200 mb-4 flex items-center justify-between rounded-lg border bg-white p-3 shadow">
+        <div className="border-border-200 mb-4 flex items-center justify-between rounded-lg border bg-white p-3 shadow dark:border-gray-7 dark:bg-dark-2">
           {title && (
-            <h3 className="text-heading text-lg font-semibold sm:text-xl">
+            <h3 className="text-heading text-lg font-semibold dark:text-white sm:text-xl">
               {title}
             </h3>
           )}

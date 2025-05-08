@@ -70,7 +70,7 @@ const BookCarousel = ({
           <Carousel
             items={products}
             breakpoints={breakpoints}
-            spaceBetween={0}
+            spaceBetween={20}
             className="-mt-6 pt-4"
           >
             {(item: any) => <BookCard product={item} />}

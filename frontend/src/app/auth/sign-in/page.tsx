@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function SignIn() {
   return (
     <>
-      <div className="rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card">
+      <div className="container mx-auto mt-8 rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card">
         <div className="flex flex-wrap items-center">
           <div className="w-full xl:w-1/2">
             <div className="w-full p-4 sm:p-12.5 xl:p-15">
@@ -29,7 +29,6 @@ export default function SignIn() {
                   width={176}
                   height={32}
                 />
-                
               </Link>
               <p className="mb-3 text-xl font-medium text-dark dark:text-white">
                 Sign in to your account

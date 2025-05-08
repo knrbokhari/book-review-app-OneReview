@@ -14,6 +14,8 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "@/components/Layouts/sidebar";
 import { Header } from "@/components/Layouts/header";
 import { DashboardSidebar } from "@/components/Layouts/dashboardSidebar";
+import QueryProvider from "@/apis/client/query-provider";
+import Footer from "@/components/ui/footer";
 
 export default function RootLayout({ children }: PropsWithChildren) {
   const pathname = usePathname();
@@ -24,45 +26,48 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Providers>
-          <NextTopLoader color="#5750F1" showSpinner={false} />
+        <QueryProvider>
+          <Providers>
+            <NextTopLoader color="#5750F1" showSpinner={false} />
 
-          {isAdminRoute ? (
-            <div className="flex min-h-screen">
-              <Sidebar />
+            {isAdminRoute ? (
+              <div className="flex min-h-screen">
+                <Sidebar />
 
-              <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                <Header />
+                <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                  <Header />
 
-                <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                  {children}
-                </main>
+                  <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
+                    {children}
+                  </main>
+                </div>
               </div>
-            </div>
-          ) : isDashboardRoute ? (
-            <div className="flex min-h-screen">
-              <DashboardSidebar />
+            ) : isDashboardRoute ? (
+              <div className="flex min-h-screen">
+                <DashboardSidebar />
 
-              <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                <Header />
+                <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                  <Header />
 
-                <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                  {children}
-                </main>
+                  <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
+                    {children}
+                  </main>
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="flex min-h-screen">
-              <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                <HomeHeader />
+            ) : (
+              <div className="flex min-h-screen">
+                <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                  <HomeHeader />
 
-                <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                  {children}
-                </main>
+                  <main className="max-w-screen-2xl- p-4-md:p-6-2xl:p-10 isolate mx-auto w-full overflow-hidden">
+                    {children}
+                  </main>
+                  <Footer />
+                </div>
               </div>
-            </div>
-          )}
-        </Providers>
+            )}
+          </Providers>
+        </QueryProvider>
       </body>
     </html>
   );

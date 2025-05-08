@@ -1,3 +1,6 @@
+"use client";
+
+import { useAuthorListQuery } from "@/apis/authors";
 import { TrashIcon } from "@/assets/icons";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import {
@@ -14,6 +17,12 @@ import Image from "next/image";
 import React from "react";
 
 const page = () => {
+  // useAuthorListQuery
+  const { authors, loading } = useAuthorListQuery({
+    limit: 20,
+    page: 1,
+  });
+  console.log(authors);
   const data = [
     {
       name: "naeem",

@@ -28,7 +28,7 @@ const page = () => {
   ];
   return (
     <div>
-      <Breadcrumb pageName="Categories" />
+      <Breadcrumb pageName="Books" />
 
       <div className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:p-7.5">
         <Table>
@@ -36,10 +36,10 @@ const page = () => {
             <TableRow className="border-none bg-[#F7F9FC] dark:bg-dark-2 [&>th]:py-4 [&>th]:text-base [&>th]:text-dark [&>th]:dark:text-white">
               <TableHead>Book Name</TableHead>
               <TableHead>Author</TableHead>
-              <TableHead>category</TableHead>
-              <TableHead>publisher</TableHead>
-              <TableHead>rating</TableHead>
-              <TableHead>review</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Publisher</TableHead>
+              <TableHead>Rating</TableHead>
+              <TableHead>Review</TableHead>
               <TableHead>Publish Date</TableHead>
               <TableHead className="text-right xl:pr-7.5">Actions</TableHead>
             </TableRow>
@@ -51,44 +51,53 @@ const page = () => {
                 key={index}
                 className="border-[#eee] dark:border-dark-3"
               >
-                <TableCell className="flex min-w-fit items-center gap-3 pl-5 sm:pl-6 xl:pl-7.5">
+                <TableCell className="flex min-w-fit items-center gap-3 pl-5 dark:text-white sm:pl-6 xl:pl-7.5">
                   <Image
-                    src={item.image}
-                    className="aspect-[6/5] w-15 rounded-[5px] object-cover"
-                    width={60}
+                    src="/images/home/book1.jpg" //{item.image}
+                    className="aspect-[4/6] w-15 rounded-[5px] object-cover"
+                    width={40}
                     height={50}
                     alt={"Image for " + item.name}
                     role="presentation"
                   />
-                  <div>{item.name}</div>
-                </TableCell>
-
-                <TableCell>
-                  <h5 className="text-dark dark:text-white">{item.author}</h5>
+                  <div>
+                    Atomic Habits
+                    {/* {item.name} */}
+                  </div>
                 </TableCell>
 
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.categories}
-                  </h5>
-                </TableCell>
-                <TableCell>
-                  <h5 className="text-dark dark:text-white">
-                    {item.publication}
+                    {/* {item.author} */} James Clear
                   </h5>
                 </TableCell>
 
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">{item.ratings}</h5>
-                </TableCell>
-                <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.totalReviews}
+                    {/* {item.categories} */} Self-help
                   </h5>
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.publicationDate}
+                    {/* {item.publication} */} Avery
+                  </h5>
+                </TableCell>
+
+                <TableCell>
+                  <h5 className="text-dark dark:text-white">
+                    {/* {item.ratings} */}
+                    4.8
+                  </h5>
+                </TableCell>
+                <TableCell>
+                  <h5 className="text-dark dark:text-white">
+                    {/* {item.totalReviews}  */} 100
+                  </h5>
+                </TableCell>
+                <TableCell>
+                  <h5 className="text-dark dark:text-white">
+                    {/* {item.publicationDate} */}
+                    October 16, 2018
                   </h5>
                 </TableCell>
                 <TableCell className="xl:pr-7.5">

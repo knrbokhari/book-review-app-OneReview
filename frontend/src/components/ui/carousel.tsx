@@ -94,20 +94,20 @@ const Carousel = ({ items, children, className, ...rest }: CarouselProps) => {
           </SwiperSlide>
         ))}
       </Swiper>
-      <div
+      {/* <div
         ref={(node) => setPrevEl(node)}
         className="author-slider-prev bg-light text-heading shadow-300 absolute top-1/2 z-[5] -mt-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full outline-none transition-colors hover:text-orange-500 focus:outline-none ltr:-left-3 ltr:lg:-left-4 rtl:-right-3 rtl:lg:-right-4"
       >
         <span className="sr-only">Previous</span>
         {isRTL ? <ChevronRight /> : <ChevronLeft />}
-      </div>
-      <div
+      </div> */}
+      {/* <div
         ref={(node) => setNextEl(node)}
         className="author-slider-next bg-light text-heading shadow-300 absolute top-1/2 z-[5] -mt-4 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full outline-none transition-colors hover:text-orange-500 focus:outline-none ltr:-right-3 ltr:lg:-right-4 rtl:-left-3 rtl:lg:-left-4"
       >
         <span className="sr-only">Next</span>
         {isRTL ? <ChevronLeft /> : <ChevronRight />}
-      </div>
+      </div> */}
     </div>
   );
 };
