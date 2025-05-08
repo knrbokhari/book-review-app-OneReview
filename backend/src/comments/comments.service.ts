@@ -1,14 +1,14 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class CommentService {
+export class CommentsService {
   constructor(private prisma: PrismaService) {}
 
   async create(userId: string, dto: CreateCommentDto) {

@@ -175,12 +175,12 @@ model Book {
   tags            String[]
   page            Int?
   isbn            String?
-  viewWeight      Float        @default(0)
+  viewWeight      Float?       @default(0)
   publicationDate DateTime?
   language        String       @default("English")
   country         String?
   currentEdition  String?
-  price           Float
+  price           Float?
   categories      Categories[]
   summary         String?
   description     String?

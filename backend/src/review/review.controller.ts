@@ -6,26 +6,24 @@ import {
   Body,
   Param,
   Delete,
-  UseGuards,
-  Req,
-  Query,
-  ParseIntPipe,
   Put,
+  Query,
+  Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-import { AuthGuard } from '@nestjs/passport';
-// import { Request } from 'express';
+// import { any } from 'express';
 
-@Controller('review')
+@Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Post()
   create(@Body() dto: CreateReviewDto, @Req() req: any) {
-    const userId = req?.user?.id;
+    const userId = req.user.id;
     return this.reviewService.create(userId, dto);
   }
 
@@ -43,7 +41,7 @@ export class ReviewController {
     return this.reviewService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Put(':id')
   update(
     @Param('id') id: string,
@@ -54,7 +52,7 @@ export class ReviewController {
     return this.reviewService.update(id, userId, dto);
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;

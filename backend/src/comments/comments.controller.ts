@@ -6,22 +6,19 @@ import {
   Body,
   Param,
   Delete,
+  Req,
   Put,
   Query,
-  Req,
-  UseGuards,
 } from '@nestjs/common';
+import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-// import { Request } from 'express';
-import { AuthGuard } from '@nestjs/passport';
-import { CommentService } from './comments.service';
 
 @Controller('comments')
-export class CommentController {
-  constructor(private readonly commentService: CommentService) {}
+export class CommentsController {
+  constructor(private readonly commentService: CommentsService) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Post()
   create(@Body() dto: CreateCommentDto, @Req() req: any) {
     const userId = req.user.id;
@@ -38,7 +35,7 @@ export class CommentController {
     return this.commentService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Put(':id')
   update(
     @Param('id') id: string,
@@ -49,7 +46,7 @@ export class CommentController {
     return this.commentService.update(id, userId, dto);
   }
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: any) {
     const userId = req.user.id;
