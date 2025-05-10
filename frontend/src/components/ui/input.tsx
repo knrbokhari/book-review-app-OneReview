@@ -13,15 +13,16 @@ export interface Props extends InputHTMLAttributes<HTMLInputElement> {
   variant?: "normal" | "solid" | "outline";
   dimension?: "small" | "medium" | "big";
   showLabel?: boolean;
+  isRequired?: boolean;
 }
 
 const classes = {
   root: "px-4 h-12 flex items-center w-full rounded appearance-none transition duration-300 ease-in-out text-heading text-sm focus:outline-none focus:ring-0",
   normal:
-    "bg-gray-100 border border-border-base focus:shadow focus:bg-light focus:border-accent",
+    "bg-gray-100 border border-border-base focus:shadow focus:bg-light focus:border-[#32b4fc]",
   solid:
-    "bg-gray-100 border border-border-100 focus:bg-light focus:border-accent",
-  outline: "border border-border-base focus:border-accent",
+    "bg-gray-100 border border-border-100 focus:bg-light focus:border-[#32b4fc]",
+  outline: "border border-border-base focus:border-[#32b4fc]",
   shadow: "focus:shadow",
 };
 const sizeClasses = {
@@ -45,6 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
       inputClassName,
       disabled,
       showLabel = true,
+      isRequired = false,
       ...rest
     },
     ref,
@@ -71,6 +73,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
             className="text-body-dark mb-3 block text-sm font-semibold leading-none"
           >
             {label}
+            {isRequired && <span className="text-red-600">*</span>}
           </label>
         ) : (
           ""

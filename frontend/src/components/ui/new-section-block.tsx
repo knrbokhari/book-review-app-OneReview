@@ -35,7 +35,7 @@ const NewSectionBlock: React.FC<SectionProps> = ({
           {href && (
             <CustomLink
               href={`${href}`.replace("//", "/")}
-              className="md:hover:text-accent justify-end border border-gray-400 px-3 py-2 text-base font-semibold transition-colors md:hover:border-green-500"
+              className="justify-end border border-gray-400 px-3 py-2 text-base font-semibold transition-colors md:hover:border-green-500 md:hover:text-[#32b4fc]"
             >
               {button_text || "See More"}
             </CustomLink>

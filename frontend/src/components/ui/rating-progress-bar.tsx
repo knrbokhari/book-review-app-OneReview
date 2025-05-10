@@ -12,7 +12,7 @@ export default function RatingProgressBar({
   ratingId = 0,
   ratingProgressItem,
   totalReviews,
-  colorClassName = "bg-accent",
+  colorClassName = "bg-[#32b4fc]",
 }: RatingProgressProps) {
   return (
     <div className="text-heading flex items-center text-sm">

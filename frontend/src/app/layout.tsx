@@ -16,6 +16,10 @@ import { Header } from "@/components/Layouts/header";
 import { DashboardSidebar } from "@/components/Layouts/dashboardSidebar";
 import QueryProvider from "@/apis/client/query-provider";
 import Footer from "@/components/ui/footer";
+import { ModalProvider } from "@/components/ui/modal/modal.context";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import ManagedModal from "@/components/ui/modal/managed-modal";
 
 export default function RootLayout({ children }: PropsWithChildren) {
   const pathname = usePathname();
@@ -26,48 +30,52 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <QueryProvider>
-          <Providers>
-            <NextTopLoader color="#5750F1" showSpinner={false} />
+        <ModalProvider>
+          <QueryProvider>
+            <Providers>
+              <NextTopLoader color="#5750F1" showSpinner={false} />
 
-            {isAdminRoute ? (
-              <div className="flex min-h-screen">
-                <Sidebar />
+              {isAdminRoute ? (
+                <div className="flex min-h-screen">
+                  <Sidebar />
 
-                <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                  <Header />
+                  <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                    <Header />
 
-                  <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                    {children}
-                  </main>
+                    <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
+                      {children}
+                    </main>
+                  </div>
                 </div>
-              </div>
-            ) : isDashboardRoute ? (
-              <div className="flex min-h-screen">
-                <DashboardSidebar />
+              ) : isDashboardRoute ? (
+                <div className="flex min-h-screen">
+                  <DashboardSidebar />
 
-                <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                  <Header />
+                  <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                    <Header />
 
-                  <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                    {children}
-                  </main>
+                    <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
+                      {children}
+                    </main>
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="flex min-h-screen">
-                <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                  <HomeHeader />
+              ) : (
+                <div className="flex min-h-screen">
+                  <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                    <HomeHeader />
 
-                  <main className="max-w-screen-2xl- p-4-md:p-6-2xl:p-10 isolate mx-auto w-full overflow-hidden">
-                    {children}
-                  </main>
-                  <Footer />
+                    <main className="max-w-screen-2xl- p-4-md:p-6-2xl:p-10 isolate mx-auto w-full overflow-hidden">
+                      {children}
+                    </main>
+                    <Footer />
+                  </div>
                 </div>
-              </div>
-            )}
-          </Providers>
-        </QueryProvider>
+              )}
+            </Providers>
+            <ManagedModal />
+            <ToastContainer autoClose={2000} theme="colored" />
+          </QueryProvider>
+        </ModalProvider>
       </body>
     </html>
   );

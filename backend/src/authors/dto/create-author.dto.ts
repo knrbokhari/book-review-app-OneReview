@@ -1,17 +1,20 @@
-import { IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateAuthorDto {
   @IsString()
   name: string;
 
   @IsOptional()
-  @IsUrl()
+  // @IsUrl()
+  @IsString()
   image?: string;
 
   @IsOptional()
-  @IsUrl()
+  // @IsUrl()
+  @IsString()
   cover_image?: string;
 
+  @IsOptional()
   @IsString()
   slug: string;
 

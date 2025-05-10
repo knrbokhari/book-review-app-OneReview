@@ -18,7 +18,7 @@ const RatingsBadge: React.FC<RatingProps> = ({
   return (
     <span
       className={cn(
-        "bg-accent inline-flex shrink-0 items-center rounded-full text-white",
+        "inline-flex shrink-0 items-center rounded-full bg-[#32b4fc] text-white",
         {
           "px-2 py-[3px] text-sm": variant === "xs",
           "px-3 py-1 text-base": variant === "small",

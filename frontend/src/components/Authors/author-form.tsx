@@ -10,8 +10,14 @@ import Label from "../ui/label";
 import Button from "../ui/button";
 import ValidationError from "../ui/form-validation-error";
 import { DatePicker } from "@/components/ui/date-picker";
+import {
+  useCreateAuthorMutation,
+  useUpdateAuthorMutation,
+} from "@/apis/authors";
+import { getErrorMessage } from "@/utils/form-error";
 
 type FormValues = {
+  id?: any;
   name: string;
   slug?: string;
   bio?: string;
@@ -27,6 +33,17 @@ type IProps = {
 
 const AuthorForm = ({ initialValues }: IProps) => {
   const {
+    mutate: createAuthor,
+    isSuccess: createSuccess,
+    isPending: creating,
+  } = useCreateAuthorMutation();
+  const {
+    mutate: updateAuthor,
+    isSuccess: updateSuccess,
+    isPending: updating,
+  } = useUpdateAuthorMutation();
+
+  const {
     register,
     handleSubmit,
     control,
@@ -35,10 +52,33 @@ const AuthorForm = ({ initialValues }: IProps) => {
     formState: { errors },
   } = useForm<FormValues>({
     shouldUnregister: true,
+    ...(initialValues && {
+      defaultValues: initialValues,
+    }),
     // resolver: yupResolver(authorValidationSchema),
   });
 
-  const onSubmit = (value: any) => {};
+  const onSubmit = async (value: any) => {
+    try {
+      if (!initialValues) {
+        await createAuthor(value); // Make sure this is awaited
+      } else {
+        await updateAuthor({
+          ...value,
+          id: initialValues.id!,
+        });
+      }
+    } catch (error) {
+      // const serverErrors = getErrorMessage(error);
+      // Object.keys(serverErrors?.validation).forEach((field: any) => {
+      //   setError(field.split(".")[1], {
+      //     type: "manual",
+      //     message: serverErrors?.validation[field][0],
+      //   });
+      // });
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="my-5 flex flex-wrap sm:my-8">
@@ -57,6 +97,7 @@ const AuthorForm = ({ initialValues }: IProps) => {
             error={errors.name?.message!}
             variant="outline"
             className="mb-5"
+            isRequired={true}
           />
 
           <TextArea
@@ -79,7 +120,7 @@ const AuthorForm = ({ initialValues }: IProps) => {
                     onBlur={onBlur}
                     //@ts-ignore
                     selected={value}
-                    selectsStart
+                    // selectsStart
                     startDate={new Date()}
                     className="border-border-base border"
                   />
@@ -100,7 +141,7 @@ const AuthorForm = ({ initialValues }: IProps) => {
                     onBlur={onBlur}
                     //@ts-ignore
                     selected={value}
-                    selectsEnd
+                    // selectsEnd
                     startDate={new Date()}
                     className="border-border-base border"
                   />
@@ -109,6 +150,28 @@ const AuthorForm = ({ initialValues }: IProps) => {
               <ValidationError message={errors.death?.message!} />
             </div>
           </div>
+
+          <Input
+            label="Image"
+            {...register("image")}
+            error={errors.image?.message!}
+            variant="outline"
+            className="mb-5"
+            type="url"
+            placeholder="Ex: http://one-review.com/image.jpg"
+          />
+
+          <input type="url" />
+
+          <Input
+            label="Cover Image"
+            {...register("cover_image")}
+            error={errors.cover_image?.message!}
+            variant="outline"
+            className="mb-5"
+            type="url"
+            placeholder="Ex: http://one-review.com/cover-image.jpg"
+          />
         </Card>
       </div>
       <div className="mb-4 text-end">
