@@ -1,23 +1,32 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { toSnakeCase } from 'src/authors/authors.service';
 
 @Injectable()
 export class BooksService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateBookDto) {
-    const { authors, categories, ...rest } = data;
+    const { authors, categories, publisher, ...rest } = data;
 
     return this.prisma.book.create({
       data: {
         ...rest,
-        authors: {
-          connect: authors.map((id) => ({ id })),
+        page: Number(rest.page),
+        price: Number(rest.price),
+        slug: toSnakeCase(rest.name),
+        author: {
+          connect: {
+            id: authors?.id,
+          },
         },
+        publicationId: publisher?.id,
         categories: {
-          connect: categories.map((id) => ({ id })),
+          connect: categories.map((c) => ({ id: c.id })),
         },
       },
     });
@@ -31,7 +40,7 @@ export class BooksService {
         take: limit,
         orderBy: { createdAt: 'desc' },
         include: {
-          authors: true,
+          // authors: true,
           categories: true,
           publication: true,
         },
@@ -46,7 +55,7 @@ export class BooksService {
     const book = await this.prisma.book.findUnique({
       where: { id },
       include: {
-        authors: true,
+        // authors: true,
         categories: true,
         publication: true,
       },

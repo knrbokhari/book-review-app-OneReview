@@ -168,7 +168,8 @@ model Book {
   subtitle        String?
   slug            String       @unique
   book_type       String?
-  authors         Authors[]
+  author          Authors?     @relation(fields: [authorId], references: [id])
+  authorId        Int?
   publication     Publication? @relation(fields: [publicationId], references: [id])
   publicationId   Int?
   status          String?      @default("draft")

@@ -1,6 +1,6 @@
-import Select from '@/components/ui/select/select';
-import { Controller } from 'react-hook-form';
-import { GetOptionLabel } from 'react-select';
+import Select from "@/components/ui/select/select";
+import { Controller } from "react-hook-form";
+import { GetOptionLabel } from "react-select";
 
 interface SelectInputProps {
   control: any;

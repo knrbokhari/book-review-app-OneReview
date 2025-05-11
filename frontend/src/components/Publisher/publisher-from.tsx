@@ -109,8 +109,6 @@ const PublisherForm = ({ initialValues }: IProps) => {
             placeholder="Ex: http://one-review.com/image.jpg"
           />
 
-          <input type="url" />
-
           <Input
             label="Cover Image"
             {...register("cover_image")}

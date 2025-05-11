@@ -1,11 +1,9 @@
 import {
   IsArray,
   IsDateString,
-  IsNumber,
+  IsObject,
   IsOptional,
   IsString,
-  IsUrl,
-  Min,
 } from 'class-validator';
 
 export class CreateBookDto {
@@ -16,6 +14,7 @@ export class CreateBookDto {
   @IsString()
   subtitle?: string;
 
+  @IsOptional()
   @IsString()
   slug: string;
 
@@ -23,12 +22,16 @@ export class CreateBookDto {
   @IsString()
   book_type?: string;
 
-  @IsArray()
-  @IsNumber({}, { each: true })
-  authors: number[];
+  // @IsArray()
+  @IsOptional()
+  @IsObject()
+  authors: any;
 
   @IsOptional()
-  @IsNumber()
+  publisher: any;
+
+  @IsOptional()
+  @IsString()
   publicationId?: number;
 
   @IsOptional()
@@ -41,8 +44,8 @@ export class CreateBookDto {
   tags?: string[];
 
   @IsOptional()
-  @IsNumber()
-  page?: number;
+  @IsString()
+  page?: string;
 
   @IsOptional()
   @IsString()
@@ -64,13 +67,13 @@ export class CreateBookDto {
   @IsString()
   currentEdition?: string;
 
-  @IsNumber()
-  @Min(0)
-  price: number;
+  @IsString()
+  // @Min(0)
+  price: string;
 
   @IsArray()
-  @IsNumber({}, { each: true })
-  categories: number[];
+  // @IsNumber({}, { each: true })
+  categories: any;
 
   @IsOptional()
   @IsString()
@@ -81,11 +84,11 @@ export class CreateBookDto {
   description?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   image?: string;
 
   @IsOptional()
   @IsArray()
-  @IsUrl({}, { each: true })
+  @IsString()
   gallery?: string[];
 }

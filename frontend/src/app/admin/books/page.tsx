@@ -1,5 +1,10 @@
+"use client";
+
+import { useBookListQuery } from "@/apis/book";
 import { TrashIcon } from "@/assets/icons";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Button from "@/components/ui/button";
+import { useModalAction } from "@/components/ui/modal/modal.context";
+import { Loader } from "@/components/ui/spinner/spinner";
 import {
   Table,
   TableBody,
@@ -11,24 +16,31 @@ import {
 import dayjs from "dayjs";
 import { Edit } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const page = () => {
-  const data = [
-    {
-      image: null,
-      name: "naeem",
-      author: "sdfds",
-      categories: "",
-      publication: "",
-      ratings: 0,
-      totalReviews: 0,
-      publicationDate: "",
-    },
-  ];
+  const router = useRouter();
+  const { openModal } = useModalAction();
+  const { books, loading } = useBookListQuery({
+    limit: 20,
+    page: 1,
+  });
+
+  if (loading) return <Loader text="Loading..." />;
+
   return (
     <div>
-      <Breadcrumb pageName="Books" />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-[26px] font-bold leading-[30px] text-dark dark:text-white">
+          Books
+        </h2>
+
+        <Link href="/admin/books/create">
+          <Button>Add Book</Button>
+        </Link>
+      </div>
 
       <div className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:p-7.5">
         <Table>
@@ -46,7 +58,7 @@ const page = () => {
           </TableHeader>
 
           <TableBody>
-            {data.map((item, index) => (
+            {books?.map((item: any, index: any) => (
               <TableRow
                 key={index}
                 className="border-[#eee] dark:border-dark-3"
@@ -60,54 +72,51 @@ const page = () => {
                     alt={"Image for " + item.name}
                     role="presentation"
                   />
-                  <div>
-                    Atomic Habits
-                    {/* {item.name} */}
-                  </div>
+                  <div>{item.name}</div>
                 </TableCell>
 
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">
-                    {/* {item.author} */} James Clear
-                  </h5>
+                  <h5 className="text-dark dark:text-white">{item?.author}</h5>
                 </TableCell>
 
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">
-                    {/* {item.categories} */} Self-help
-                  </h5>
+                  {item?.categories.map((i: any) => (
+                    <h5 className="text-dark dark:text-white">{i?.name}</h5>
+                  ))}
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {/* {item.publication} */} Avery
+                    {item?.publication?.name}
                   </h5>
                 </TableCell>
 
                 <TableCell>
+                  <h5 className="text-dark dark:text-white">{item.ratings}</h5>
+                </TableCell>
+                <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {/* {item.ratings} */}
-                    4.8
+                    {item.totalReviews}
                   </h5>
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {/* {item.totalReviews}  */} 100
-                  </h5>
-                </TableCell>
-                <TableCell>
-                  <h5 className="text-dark dark:text-white">
-                    {/* {item.publicationDate} */}
-                    October 16, 2018
+                    {item?.publicationDate}
                   </h5>
                 </TableCell>
                 <TableCell className="xl:pr-7.5">
                   <div className="flex items-center justify-end gap-x-3.5">
-                    <button className="hover:text-primary">
+                    <button
+                      onClick={(e) => router.push(`/admin/books/${item?.id}`)}
+                      className="text-green-500 hover:text-green-700"
+                    >
                       <span className="sr-only">View Invoice</span>
                       <Edit size={18} />
                     </button>
 
-                    <button className="hover:text-primary">
+                    <button
+                      onClick={() => openModal("DELETE_BOOK_VIEW", item?.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
                       <span className="sr-only">Delete Invoice</span>
                       <TrashIcon width={20} height={20} />
                     </button>
