@@ -1,5 +1,10 @@
+"use client";
+
+import { usePublisherListQuery } from "@/apis/publisher";
 import { TrashIcon } from "@/assets/icons";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Button from "@/components/ui/button";
+import { useModalAction } from "@/components/ui/modal/modal.context";
+import { Loader } from "@/components/ui/spinner/spinner";
 import {
   Table,
   TableBody,
@@ -11,20 +16,31 @@ import {
 import dayjs from "dayjs";
 import { Edit } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const page = () => {
-  const data = [
-    {
-      name: "naeem",
-      image: null,
-      created_at: null,
-      products_count: 0,
-    },
-  ];
+  const router = useRouter();
+  const { openModal } = useModalAction();
+  const { publishers, loading } = usePublisherListQuery({
+    limit: 20,
+    page: 1,
+  });
+
+  if (loading) return <Loader text="Loading..." />;
+
   return (
     <div>
-      <Breadcrumb pageName="Publishers" />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-[26px] font-bold leading-[30px] text-dark dark:text-white">
+          Publishers
+        </h2>
+
+        <Link href="/admin/publishers/create">
+          <Button>Add Publisher</Button>
+        </Link>
+      </div>
 
       <div className="rounded-[10px] border border-stroke bg-white p-4 shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card sm:p-7.5">
         <Table>
@@ -39,7 +55,7 @@ const page = () => {
           </TableHeader>
 
           <TableBody>
-            {data.map((item, index) => (
+            {publishers?.map((item: any, index: any) => (
               <TableRow
                 key={index}
                 className="border-[#eee] dark:border-dark-3"
@@ -72,12 +88,20 @@ const page = () => {
 
                 <TableCell className="xl:pr-7.5">
                   <div className="flex items-center justify-end gap-x-3.5">
-                    <button className="hover:text-primary">
+                    <button
+                      onClick={(e) =>
+                        router.push(`/admin/publishers/${item?.id}`)
+                      }
+                      className="text-green-500 hover:text-green-700"
+                    >
                       <span className="sr-only">View Invoice</span>
                       <Edit size={18} />
                     </button>
 
-                    <button className="hover:text-primary">
+                    <button
+                      onClick={() => openModal("DELETE_AUTHOR_VIEW", item?.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
                       <span className="sr-only">Delete Invoice</span>
                       <TrashIcon width={20} height={20} />
                     </button>

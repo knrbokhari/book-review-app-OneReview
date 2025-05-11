@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Patch, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Put } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   ChangePasswordDto,
@@ -40,7 +40,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtGuard)
-  @Patch('change-password')
+  @Put('change-password')
   changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     return this.authService.changePassword(changePasswordDto);
   }

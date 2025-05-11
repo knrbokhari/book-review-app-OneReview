@@ -2,13 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePublicationDto } from './dto/create-publication.dto';
 import { UpdatePublicationDto } from './dto/update-publication.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { toSnakeCase } from 'src/authors/authors.service';
 
 @Injectable()
 export class PublicationsService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreatePublicationDto) {
-    return this.prisma.publication.create({ data });
+    return this.prisma.publication.create({
+      data: {
+        ...data,
+        slug: toSnakeCase(data?.name),
+      },
+    });
   }
 
   async findAll(page = 1, limit = 10) {

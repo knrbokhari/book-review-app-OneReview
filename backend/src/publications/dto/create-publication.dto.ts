@@ -5,15 +5,16 @@ export class CreatePublicationDto {
   name: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   image?: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   cover_image?: string;
 
+  @IsOptional()
   @IsString()
-  slug: string;
+  slug?: string;
 
   @IsOptional()
   @IsString()

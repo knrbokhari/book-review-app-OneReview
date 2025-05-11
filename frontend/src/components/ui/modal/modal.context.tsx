@@ -2,7 +2,11 @@
 
 import React, { createContext, useReducer, useContext, Dispatch } from "react";
 
-export type MODAL_VIEWS = "DELETE_VIEW";
+export type MODAL_VIEWS =
+  | "DELETE_AUTHOR_VIEW"
+  | "DELETE_PUBLISHER_VIEW"
+  | "DELETE_CATEGORY_VIEW"
+  | "DELETE_BOOK_VIEW";
 
 interface State {
   view?: MODAL_VIEWS;

@@ -28,7 +28,6 @@ const page = () => {
     limit: 20,
     page: 1,
   });
-  console.log(authors);
 
   if (loading) return <Loader text="Loading..." />;
 
@@ -100,8 +99,7 @@ const page = () => {
 
                     <button
                       onClick={(e) => {
-                        console.log("object1");
-                        openModal("DELETE_VIEW", item?.id);
+                        openModal("DELETE_AUTHOR_VIEW", item?.id);
                       }}
                       className="hover:text-primary"
                     >
