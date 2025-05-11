@@ -99,7 +99,9 @@ const page = () => {
                     </button>
 
                     <button
-                      onClick={() => openModal("DELETE_AUTHOR_VIEW", item?.id)}
+                      onClick={() =>
+                        openModal("DELETE_PUBLISHER_VIEW", item?.id)
+                      }
                       className="text-red-500 hover:text-red-700"
                     >
                       <span className="sr-only">Delete Invoice</span>

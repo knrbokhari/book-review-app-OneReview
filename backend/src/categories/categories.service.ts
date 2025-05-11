@@ -4,6 +4,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { toSnakeCase } from 'src/authors/authors.service';
 
 @Injectable()
 export class CategoriesService {
@@ -13,7 +14,7 @@ export class CategoriesService {
     return await this.prisma.categories.create({
       data: {
         name: data.name,
-        slug: data.slug,
+        slug: toSnakeCase(data.name),
       },
     });
   }

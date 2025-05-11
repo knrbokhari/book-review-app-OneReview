@@ -1,13 +1,14 @@
-import { IsString, IsOptional, IsUrl } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString()
   name: string;
 
+  @IsOptional()
   @IsString()
   slug: string;
 
   @IsOptional()
-  @IsUrl()
+  @IsString()
   image?: string;
 }
