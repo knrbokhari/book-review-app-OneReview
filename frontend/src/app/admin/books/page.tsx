@@ -81,7 +81,9 @@ const page = () => {
 
                 <TableCell>
                   {item?.categories.map((i: any) => (
-                    <h5 className="text-dark dark:text-white">{i?.name}</h5>
+                    <h5 key={i?.id} className="text-dark dark:text-white">
+                      {i?.name}
+                    </h5>
                   ))}
                 </TableCell>
                 <TableCell>
