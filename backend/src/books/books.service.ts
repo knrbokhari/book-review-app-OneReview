@@ -11,20 +11,17 @@ export class BooksService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateBookDto) {
-    const { authors, categories, publisher, ...rest } = data;
+    const { author, categories, publisher, ratings, ratting, ...rest } = data;
 
     return this.prisma.book.create({
       data: {
         ...rest,
+        ratings: parseFloat(ratings),
         page: Number(rest.page),
         price: Number(rest.price),
         slug: toSnakeCase(rest.name),
-        author: {
-          connect: {
-            id: authors?.id,
-          },
-        },
-        publicationId: publisher?.id,
+        authorId: author?.id || null,
+        publicationId: publisher?.id || null,
         categories: {
           connect: categories.map((c) => ({ id: c.id })),
         },
@@ -40,7 +37,7 @@ export class BooksService {
         take: limit,
         orderBy: { createdAt: 'desc' },
         include: {
-          // authors: true,
+          author: true,
           categories: true,
           publication: true,
         },
@@ -51,6 +48,43 @@ export class BooksService {
     return { data, total, page, limit };
   }
 
+  async popular(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.book.findMany({
+        skip,
+        take: limit,
+        orderBy: { ratings: 'desc' },
+        include: {
+          author: true,
+          categories: true,
+          publication: true,
+        },
+      }),
+      this.prisma.book.count(),
+    ]);
+
+    return { data, total, page, limit };
+  }
+
+  async newBook(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.book.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          author: true,
+          categories: true,
+          publication: true,
+        },
+      }),
+      this.prisma.book.count(),
+    ]);
+
+    return { data, total, page, limit };
+  }
   async findOne(id: number) {
     const book = await this.prisma.book.findUnique({
       where: { id },
@@ -66,15 +100,15 @@ export class BooksService {
 
   async update(id: number, data: UpdateBookDto) {
     await this.ensureExists(id);
-    const { authors, categories, ...rest } = data;
+    const { author, categories, ...rest } = data;
 
     return this.prisma.book.update({
       where: { id },
       data: {
         ...rest,
-        ...(authors && {
+        ...(author && {
           authors: {
-            set: authors.map((id) => ({ id })),
+            set: author.map((id) => ({ id })),
           },
         }),
         ...(categories && {

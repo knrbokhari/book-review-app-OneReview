@@ -28,6 +28,7 @@ type FormValues = {
   author: any;
   publication: any;
   categories: any;
+  ratings: string;
 };
 
 type IProps = {
@@ -182,6 +183,15 @@ const BookForm = ({ initialValues }: IProps) => {
             className="mb-5"
             type="url"
             placeholder="Ex: http://one-review.com/image.jpg"
+          />
+
+          <Input
+            label="Ratings"
+            {...register("ratings")}
+            error={errors.ratings?.message!}
+            variant="outline"
+            className="mb-5"
+            placeholder="Ex: 5.0"
           />
         </Card>
       </div>

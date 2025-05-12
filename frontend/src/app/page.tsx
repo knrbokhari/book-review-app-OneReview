@@ -1,6 +1,9 @@
 "use client";
 
+import { useNewBooksQuery, usePopularBooksQuery } from "@/apis/book";
+import { usePopularCategoryQuery } from "@/apis/category";
 import BookCarousel from "@/components/Book/BookCarousel";
+import CategoryCarousel from "@/components/Category/category-carosol";
 import NewsletterSignup from "@/components/Home/Newsletter";
 import BookReviewHero from "@/components/ui/HeroSections";
 import React, { useState } from "react";
@@ -440,7 +443,20 @@ export const books = [
 ];
 
 const page = () => {
-  const [filter, setFilter] = useState("all");
+  const { popularBooks, loading } = usePopularBooksQuery({
+    limit: 20,
+    page: 1,
+  });
+
+  const { newBooks, loading: newLoading } = useNewBooksQuery({
+    limit: 20,
+    page: 1,
+  });
+
+  const { popularCategories, loading: catLoading } = usePopularCategoryQuery({
+    limit: 20,
+    page: 1,
+  });
 
   return (
     <div>
@@ -448,24 +464,25 @@ const page = () => {
 
       <div className="container mx-auto mt-10">
         <BookCarousel
-          isLoading={false}
-          title="Trending Books"
-          products={books.slice(0, 20)}
+          isLoading={loading}
+          title="Popular Books"
+          products={popularBooks}
           error={undefined}
         />
 
         <BookCarousel
-          isLoading={false}
+          isLoading={newLoading}
           title="New Arrival Books"
-          products={books.slice(15, 30)}
+          products={newBooks}
           error={undefined}
         />
 
-        <BookCarousel
-          isLoading={false}
+        <CategoryCarousel
+          isLoading={catLoading}
           title="Popular Genres"
-          products={[]}
+          products={popularCategories}
           error={undefined}
+          errorText="Genres Not Found!"
         />
 
         {/* <BookCarousel
@@ -475,11 +492,12 @@ const page = () => {
           error={undefined}
         /> */}
 
-        <BookCarousel
+        <CategoryCarousel
           isLoading={false}
           title="Join a Reading Club"
           products={[]}
           error={undefined}
+          errorText="Reading Club Not Found!"
         />
 
         <BookCarousel

@@ -33,6 +33,20 @@ export class CategoriesService {
     return { data, total, page, limit };
   }
 
+  async popular(page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+    const [data, total] = await Promise.all([
+      this.prisma.categories.findMany({
+        skip,
+        take: limit,
+        orderBy: { created_at: 'desc' },
+      }),
+      this.prisma.categories.count(),
+    ]);
+
+    return { data, total, page, limit };
+  }
+
   async findOne(id: number) {
     const category = await this.prisma.categories.findUnique({ where: { id } });
     if (!category) throw new NotFoundException('Category not found');

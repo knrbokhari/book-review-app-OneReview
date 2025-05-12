@@ -25,7 +25,7 @@ export class CreateBookDto {
   // @IsArray()
   @IsOptional()
   @IsObject()
-  authors: any;
+  author: any;
 
   @IsOptional()
   publisher: any;
@@ -91,4 +91,12 @@ export class CreateBookDto {
   @IsArray()
   @IsString()
   gallery?: string[];
+
+  @IsOptional()
+  @IsString()
+  ratings?: any;
+
+  @IsOptional()
+  @IsString()
+  ratting: any;
 }

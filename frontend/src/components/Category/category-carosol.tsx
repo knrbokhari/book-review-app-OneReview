@@ -4,8 +4,8 @@ import NewSectionBlock from "../ui/new-section-block";
 import NotFound from "../ui/not-found";
 import rangeMap from "@/lib/range-map";
 import Carousel from "../ui/carousel";
-import BookCard from "./Card";
-import BookLoader from "./book-loader";
+import CategoryLoader from "./category-loader";
+import CategoryCard from "./category-card";
 
 interface Props {
   products: any;
@@ -13,46 +13,46 @@ interface Props {
   gridClassName?: string;
   isLoading: any;
   error: any;
+  errorText: any;
 }
 
 const breakpoints = {
-  280: {
+  320: {
     slidesPerView: 2,
   },
 
   600: {
+    slidesPerView: 2,
+  },
+
+  960: {
     slidesPerView: 3,
   },
 
-  860: {
+  1280: {
     slidesPerView: 4,
   },
 
-  1024: {
-    slidesPerView: 4,
-  },
-
-  1366: {
+  1600: {
     slidesPerView: 5,
   },
-
-  1450: {
-    slidesPerView: 6,
+  2600: {
+    slidesPerView: 7,
   },
 };
 
-const BookCarousel = ({
+const CategoryCarousel = ({
   products,
   title,
-  gridClassName,
   isLoading,
   error,
+  errorText,
 }: Props) => {
   if (error) return <ErrorMessage message={error.message} />;
   if (!isLoading && !products.length) {
     return (
       <NewSectionBlock title={title}>
-        <NotFound text="Book Not Found" className="mx-auto w-7/12" />
+        <NotFound text={errorText} className="mx-auto w-7/12" />
       </NewSectionBlock>
     );
   }
@@ -62,7 +62,7 @@ const BookCarousel = ({
       {isLoading && !products.length ? (
         <div className="3xl:grid-cols-[repeat(auto-fill,minmax(360px,1fr))]- grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-6 gap-y-10 lg:grid-cols-[repeat(auto-fill,minmax(200px,1fr))] xl:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] xl:gap-8 xl:gap-y-11 2xl:grid-cols-6">
           {rangeMap(6, (i) => (
-            <BookLoader key={i} uniqueKey={i} />
+            <CategoryLoader key={i} uniqueKey={i} />
           ))}
         </div>
       ) : (
@@ -73,7 +73,7 @@ const BookCarousel = ({
             spaceBetween={20}
             className="-mt-6 pt-4"
           >
-            {(item: any) => <BookCard product={item} />}
+            {(item: any) => <CategoryCard item={item} />}
           </Carousel>
         </div>
       )}
@@ -81,4 +81,4 @@ const BookCarousel = ({
   );
 };
 
-export default BookCarousel;
+export default CategoryCarousel;

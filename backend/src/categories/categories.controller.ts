@@ -30,6 +30,14 @@ export class CategoriesController {
     return this.categoriesService.findAll(page, limit);
   }
 
+  @Get('popular')
+  popular(
+    @Query('page', ParseIntPipe) page = 1,
+    @Query('limit', ParseIntPipe) limit = 10,
+  ) {
+    return this.categoriesService.popular(page, limit);
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.findOne(id);
