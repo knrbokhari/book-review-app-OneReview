@@ -76,7 +76,13 @@ export const useCategoryListQuery = (options: Record<string, any> = {}) => {
 
   return {
     categories: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };
@@ -90,7 +96,13 @@ export const usePopularCategoryQuery = (options: Record<string, any> = {}) => {
 
   return {
     popularCategories: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };

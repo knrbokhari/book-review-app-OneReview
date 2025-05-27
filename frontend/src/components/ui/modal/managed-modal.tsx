@@ -1,6 +1,9 @@
 import Modal from "@/components/ui/modal/modal";
 import dynamic from "next/dynamic";
 import { MODAL_VIEWS, useModalAction, useModalState } from "./modal.context";
+import DeleteBookView from "@/components/Book/book-delete-view";
+import DeleteCategoryView from "@/components/Category/category-delete-view";
+import DeletePublisherView from "@/components/Publisher/publisher-delete-view";
 
 const DeleteAuthorView = dynamic(
   () => import("@/components/Authors/deleteAuthorView"),
@@ -11,11 +14,11 @@ function renderModal(view: MODAL_VIEWS | undefined, data: any) {
     case "DELETE_AUTHOR_VIEW":
       return <DeleteAuthorView />;
     case "DELETE_PUBLISHER_VIEW":
-      return <DeleteAuthorView />;
+      return <DeletePublisherView />;
     case "DELETE_CATEGORY_VIEW":
-      return <DeleteAuthorView />;
+      return <DeleteCategoryView />;
     case "DELETE_BOOK_VIEW":
-      return <DeleteAuthorView />;
+      return <DeleteBookView />;
     default:
       return null;
   }

@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import client from "./client";
+import page from "@/app/page";
 
 // ADD BOOK TO MY LIBRARY
 export const useAddToLibraryMutation = () => {
@@ -28,7 +29,7 @@ export const useUpdateLibraryMutation = () => {
     mutationFn: ({ userId, bookId, ...data }: any) =>
       client?.myLibrary.update(userId, bookId, data),
     onSuccess: () => {
-      toast.success("Library updated successfully");
+      toast.success("Status updated successfully");
       queryClient.invalidateQueries({ queryKey: ["myLibrary"] });
     },
     onError: (error: any) => {
@@ -63,7 +64,13 @@ export const useLibraryListQuery = (options: Record<string, any> = {}) => {
 
   return {
     library: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };

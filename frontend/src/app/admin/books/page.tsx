@@ -4,6 +4,7 @@ import { useBookListQuery } from "@/apis/book";
 import { TrashIcon } from "@/assets/icons";
 import Button from "@/components/ui/button";
 import { useModalAction } from "@/components/ui/modal/modal.context";
+import Pagination from "@/components/ui/pagination";
 import { Loader } from "@/components/ui/spinner/spinner";
 import {
   Table,
@@ -18,18 +19,21 @@ import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const page = () => {
   const router = useRouter();
   const { openModal } = useModalAction();
-  const { books, loading } = useBookListQuery({
+  const [page, setPage] = useState(1);
+  const { books, paginatorInfo, loading } = useBookListQuery({
     limit: 20,
-    page: 1,
+    page,
   });
-
+  function handlePagination(current: number) {
+    setPage(current);
+  }
   if (loading) return <Loader text="Loading..." />;
-
+  console.log(books);
   return (
     <div>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -65,18 +69,20 @@ const page = () => {
               >
                 <TableCell className="flex min-w-fit items-center gap-3 pl-5 dark:text-white sm:pl-6 xl:pl-7.5">
                   <Image
-                    src="/images/home/book1.jpg" //{item.image}
+                    src={item?.image}
                     className="aspect-[4/6] w-15 rounded-[5px] object-cover"
                     width={40}
                     height={50}
-                    alt={"Image for " + item.name}
+                    alt={"Image for " + item?.name}
                     role="presentation"
                   />
-                  <div>{item.name}</div>
+                  <div>{item?.name}</div>
                 </TableCell>
 
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">{item?.author}</h5>
+                  <h5 className="text-dark dark:text-white">
+                    {item?.author?.name}
+                  </h5>
                 </TableCell>
 
                 <TableCell>
@@ -93,11 +99,11 @@ const page = () => {
                 </TableCell>
 
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">{item.ratings}</h5>
+                  <h5 className="text-dark dark:text-white">{item?.ratings}</h5>
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.totalReviews}
+                    {item?.totalReviews}
                   </h5>
                 </TableCell>
                 <TableCell>
@@ -128,6 +134,17 @@ const page = () => {
             ))}
           </TableBody>
         </Table>
+
+        <div className="mt-5 flex items-center justify-end">
+          {paginatorInfo?.pages > 1 && (
+            <Pagination
+              total={paginatorInfo.total}
+              current={paginatorInfo.currentPage}
+              pageSize={paginatorInfo.perPage}
+              onChange={handlePagination}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

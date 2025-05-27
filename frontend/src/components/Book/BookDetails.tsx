@@ -5,8 +5,11 @@ import { renderStars } from "@/lib/renderStars";
 import { BookOpen, Clock, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useAddToLibraryMutation } from "@/apis/my-library";
+import { useAtom } from "jotai";
+import { userAtomIt } from "@/store/userAtom";
 
 const BookDetails = ({ book }: any) => {
+  const [user, setUser] = useAtom(userAtomIt);
   const { mutate: addTo, data, isPending } = useAddToLibraryMutation();
 
   // Reading status options
@@ -114,6 +117,7 @@ const BookDetails = ({ book }: any) => {
           {/* Call to Action */}
           <div className="mt-8 flex flex-wrap gap-4">
             <button
+              disabled={isPending || !user?.id}
               onClick={() => addTo({ bookId: book?.id })}
               className="rounded-md bg-[#2BB5FF] px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700"
             >

@@ -80,7 +80,13 @@ export const useBookListQuery = (options: Record<string, any> = {}) => {
 
   return {
     books: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };
@@ -95,7 +101,13 @@ export const usePopularBooksQuery = (options: Record<string, any> = {}) => {
 
   return {
     popularBooks: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };
@@ -110,7 +122,13 @@ export const useNewBooksQuery = (options: Record<string, any> = {}) => {
 
   return {
     newBooks: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };
@@ -125,7 +143,13 @@ export const useRelatedBooksQuery = (options: Record<string, any> = {}) => {
 
   return {
     relatedBooks: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };

@@ -4,6 +4,7 @@ import { usePublisherListQuery } from "@/apis/publisher";
 import { TrashIcon } from "@/assets/icons";
 import Button from "@/components/ui/button";
 import { useModalAction } from "@/components/ui/modal/modal.context";
+import Pagination from "@/components/ui/pagination";
 import { Loader } from "@/components/ui/spinner/spinner";
 import {
   Table,
@@ -18,16 +19,19 @@ import { Edit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const page = () => {
   const router = useRouter();
   const { openModal } = useModalAction();
-  const { publishers, loading } = usePublisherListQuery({
+  const [page, setPage] = useState(1);
+  const { publishers, paginatorInfo, loading } = usePublisherListQuery({
     limit: 20,
-    page: 1,
+    page,
   });
-
+  function handlePagination(current: number) {
+    setPage(current);
+  }
   if (loading) return <Loader text="Loading..." />;
 
   return (
@@ -113,6 +117,17 @@ const page = () => {
             ))}
           </TableBody>
         </Table>
+
+        <div className="mt-5 flex items-center justify-end">
+          {paginatorInfo?.pages > 1 && (
+            <Pagination
+              total={paginatorInfo.total}
+              current={paginatorInfo.currentPage}
+              pageSize={paginatorInfo.perPage}
+              onChange={handlePagination}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

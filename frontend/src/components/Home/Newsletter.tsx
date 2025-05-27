@@ -64,8 +64,8 @@ export default function NewsletterSignup() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-xl bg-white shadow-lg dark:bg-dark-2">
+      <div className="container mx-auto py-12">
+        <div className="mx-auto overflow-hidden rounded-xl bg-white shadow-lg dark:bg-dark-2">
           <div className="flex flex-col md:flex-row">
             {/* Signup Form */}
             <div className="w-full p-8">

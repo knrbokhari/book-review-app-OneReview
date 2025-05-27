@@ -5,6 +5,7 @@ import { usePopularCategoryQuery } from "@/apis/category";
 import BookCarousel from "@/components/Book/BookCarousel";
 import CategoryCarousel from "@/components/Category/category-carosol";
 import NewsletterSignup from "@/components/Home/Newsletter";
+import WhatReadersAreSaying from "@/components/Home/WhatReadersAreSaying";
 import BookReviewHero from "@/components/ui/HeroSections";
 import React, { useState } from "react";
 
@@ -500,12 +501,13 @@ const page = () => {
           errorText="Reading Club Not Found!"
         />
 
-        <BookCarousel
+        {/* <BookCarousel
           isLoading={false}
           title="What Readers Are Saying"
           products={[]}
           error={undefined}
-        />
+        /> */}
+        <WhatReadersAreSaying />
 
         <NewsletterSignup />
       </div>

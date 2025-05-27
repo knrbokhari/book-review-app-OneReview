@@ -1,5 +1,10 @@
+"use client";
+
+import { useLibraryListQuery } from "@/apis/my-library";
 import { TrashIcon } from "@/assets/icons";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import UpdateStatus from "@/components/my-library/updateStatus";
+import Pagination from "@/components/ui/pagination";
 import {
   Table,
   TableBody,
@@ -9,21 +14,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import dayjs from "dayjs";
+import { set } from "lodash";
 import { Edit } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 const page = () => {
-  const data = [
-    {
-      image: null,
-      name: "naeem",
-      status: "sdfds",
-      ratings: 0,
-      totalReviews: 0,
-      addedDate: "",
-    },
-  ];
+  const [page, setPage] = useState(1);
+  const { library, loading, paginatorInfo } = useLibraryListQuery({
+    page,
+    perPage: 10,
+    sortBy: "addedDate",
+    sortOrder: "desc",
+  });
+
+  function handlePagination(current: number) {
+    setPage(current);
+  }
+
   return (
     <div>
       <h2 className="mb-5 text-[26px] font-bold leading-[30px] text-dark dark:text-white">
@@ -44,65 +52,49 @@ const page = () => {
           </TableHeader>
 
           <TableBody>
-            {data.map((item, index) => (
+            {library?.map((item: any, index: number) => (
               <TableRow
                 key={index}
                 className="border-[#eee] dark:border-dark-3"
               >
                 <TableCell className="flex min-w-fit items-center gap-3 pl-5 sm:pl-6 xl:pl-7.5">
-                  {/* <Image
-                    src={item.image}
-                    className="aspect-[6/5] w-15 rounded-[5px] object-cover"
-                    width={60}
-                    height={50}
-                    alt={"Image for " + item.name}
-                    role="presentation"
-                  />
-                  <div>{item.name}</div> */}
                   <Image
-                    src="/images/home/book1.jpg" //{item.image}
+                    src={item?.book?.image}
                     className="aspect-[4/6] w-15 rounded-[5px] object-cover"
                     width={40}
                     height={50}
                     alt={"Image for " + item.name}
                     role="presentation"
                   />
-                  <div>Atomic Habits</div>
+                  <div>{item?.book?.name}</div>
                 </TableCell>
 
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {/* {item.ratings} */}
-                    4.8
+                    {item?.book?.ratings}
                   </h5>
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {/* {item.totalReviews} */} 100+
+                    {item?.book?.totalReviews}
                   </h5>
                 </TableCell>
                 <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {/* {item.addedDate} */} May 7, 2025
+                    {item?.createdAt}
                   </h5>
                 </TableCell>
                 <TableCell>
-                  <h5 className="text-dark dark:text-white">
-                    {/* {item.status} */}
+                  <UpdateStatus item={item} />
 
-                    <select name="" id="">
-                      <option value="Want to Read">Want to Read</option>
-                      <option value="Currently Reading">
-                        Currently Reading
-                      </option>
-                      <option value="Completed">Completed</option>
-                    </select>
-                  </h5>
+                  {/* <h5 className="text-dark dark:text-white">
+                    <UpdateStatus item={item} />
+                  </h5> */}
                 </TableCell>
                 <TableCell className="xl:pr-7.5">
                   <div className="flex items-center justify-end gap-x-3.5">
                     <button className="hover:text-primary">
-                      <span className="sr-only">Delete Invoice</span>
+                      <span className="sr-only">Delete</span>
                       <TrashIcon width={20} height={20} />
                     </button>
                   </div>
@@ -111,6 +103,16 @@ const page = () => {
             ))}
           </TableBody>
         </Table>
+        <div className="mt-5 flex items-center justify-end">
+          {paginatorInfo?.pages > 1 && (
+            <Pagination
+              total={paginatorInfo.total}
+              current={paginatorInfo.currentPage}
+              pageSize={paginatorInfo.perPage}
+              onChange={handlePagination}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

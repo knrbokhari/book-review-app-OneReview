@@ -77,7 +77,13 @@ export const usePublisherListQuery = (options: Record<string, any> = {}) => {
 
   return {
     publishers: data?.data ?? [],
-    paginatorInfo: data?.page,
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
     error,
     loading: isLoading,
   };
