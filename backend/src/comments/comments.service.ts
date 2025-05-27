@@ -11,7 +11,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CommentsService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: string, dto: CreateCommentDto) {
+  async create(userId: number, dto: CreateCommentDto) {
     if (!dto.reviewId && !dto.parentId) {
       throw new Error(
         'Comment must be attached to a review or another comment',
@@ -28,7 +28,7 @@ export class CommentsService {
     });
   }
 
-  async findAll(reviewId?: string) {
+  async findAll(reviewId?: number) {
     const where = reviewId ? { reviewId, parentId: null } : { parentId: null };
 
     return this.prisma.comment.findMany({
@@ -50,7 +50,7 @@ export class CommentsService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const comment = await this.prisma.comment.findUnique({
       where: { id },
       include: {
@@ -64,7 +64,7 @@ export class CommentsService {
     return comment;
   }
 
-  async update(id: string, userId: string, dto: UpdateCommentDto) {
+  async update(id: number, userId: number, dto: UpdateCommentDto) {
     const comment = await this.prisma.comment.findUnique({ where: { id } });
     if (!comment) throw new NotFoundException('Comment not found');
     if (comment.userId !== userId)
@@ -76,7 +76,7 @@ export class CommentsService {
     });
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: number, userId: number) {
     const comment = await this.prisma.comment.findUnique({ where: { id } });
     if (!comment) throw new NotFoundException('Comment not found');
     if (comment.userId !== userId)

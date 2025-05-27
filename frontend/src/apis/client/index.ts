@@ -104,6 +104,22 @@ class Client {
     update: (data: any) => HttpClient.put<any>(`reviews/${data.id}`, data),
     delete: (id: string) => HttpClient.delete<any>(`/reviews/${id}`),
   };
+
+  myLibrary = {
+    getAll: ({ ...params }: any) =>
+      HttpClient.get<any>(`/my-library`, {
+        ...params,
+        search: HttpClient.formatSearchParams({}),
+      }),
+
+    add: (data: any) => HttpClient.post<any>(`/my-library`, data),
+
+    update: (userId: number | string, bookId: number | string, data: any) =>
+      HttpClient.put<any>(`/my-library/${userId}/${bookId}`, data),
+
+    remove: (userId: number | string, bookId: number | string) =>
+      HttpClient.delete<any>(`/my-library/${userId}/${bookId}`),
+  };
 }
 
 export default new Client();

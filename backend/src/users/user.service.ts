@@ -7,17 +7,24 @@ import { PaginationDto } from './dto/pagination.dto';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMe(userId: string) {
+  async getMe(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { authUser: true },
+      select: {
+        email: true,
+        id: true,
+        username: true,
+        profileImageUrl: true,
+        bio: true,
+        role: true,
+      },
     });
 
     if (!user) throw new NotFoundException('User not found');
     return user;
   }
 
-  async updateUser(userId: string, dto: UpdateUserDto) {
+  async updateUser(userId: number, dto: UpdateUserDto) {
     return this.prisma.user.update({
       where: { id: userId },
       data: { ...dto },
@@ -61,7 +68,7 @@ export class UserService {
     };
   }
 
-  async deactivateAccount(userId: string) {
+  async deactivateAccount(userId: number) {
     await this.prisma.authUser.update({
       where: { id: userId },
       data: {

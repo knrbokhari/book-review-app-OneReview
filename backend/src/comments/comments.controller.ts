@@ -26,19 +26,19 @@ export class CommentsController {
   }
 
   @Get()
-  findAll(@Query('reviewId') reviewId?: string) {
+  findAll(@Query('reviewId') reviewId?: number) {
     return this.commentService.findAll(reviewId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(id);
+  findOne(@Param('id') id: number) {
+    return this.commentService.findOne(+id);
   }
 
   // @UseGuards(AuthGuard)
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() dto: UpdateCommentDto,
     @Req() req: any,
   ) {
@@ -48,7 +48,7 @@ export class CommentsController {
 
   // @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: any) {
+  remove(@Param('id') id: number, @Req() req: any) {
     const userId = req.user.id;
     return this.commentService.remove(id, userId);
   }

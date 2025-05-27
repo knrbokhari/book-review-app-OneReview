@@ -4,6 +4,7 @@ import { UserInfo } from "../user-info";
 import { Menu, X, Book, BookOpen, Users, Star, Home } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import Cookies from "js-cookie";
 
 const HomeHeader = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,8 +16,9 @@ const HomeHeader = () => {
   const navItems = [
     { name: "Home", icon: <Home size={20} />, href: "/" },
     { name: "Browse Books", icon: <Book size={20} />, href: "/" },
-    { name: "Reviews", icon: <Star size={20} />, href: "/" },
-    { name: "Authors", icon: <Users size={20} />, href: "/" },
+    { name: "Club", icon: <Book size={20} />, href: "/" },
+    // { name: "Reviews", icon: <Star size={20} />, href: "/" },
+    // { name: "Authors", icon: <Users size={20} />, href: "/" },
     // { name: "Reading Lists", icon: <BookOpen size={20} />, href: "/" },
   ];
 
@@ -57,9 +59,18 @@ const HomeHeader = () => {
           </ul>
         </nav>
 
-        <ThemeToggleSwitch />
+        {/* <ThemeToggleSwitch /> */}
         <div className="shrink-0">
-          <UserInfo />
+          {Cookies.get("auth_token") ? (
+            <UserInfo />
+          ) : (
+            <Link
+              href={"/auth/sign-in"}
+              className="flex items-center gap-1 font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         {/* Mobile menu button */}

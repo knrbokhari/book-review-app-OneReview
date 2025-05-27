@@ -11,7 +11,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 export class ReviewService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: string, dto: CreateReviewDto) {
+  async create(userId: number, dto: CreateReviewDto) {
     const existing = await this.prisma.review.findUnique({
       where: {
         userId_bookId: {
@@ -55,7 +55,7 @@ export class ReviewService {
     return { data, total, page, limit };
   }
 
-  async findOne(id: string) {
+  async findOne(id: number) {
     const review = await this.prisma.review.findUnique({
       where: { id },
       include: {
@@ -69,7 +69,7 @@ export class ReviewService {
     return review;
   }
 
-  async update(id: string, userId: string, dto: UpdateReviewDto) {
+  async update(id: number, userId: number, dto: UpdateReviewDto) {
     const review = await this.prisma.review.findUnique({ where: { id } });
     if (!review) throw new NotFoundException('Review not found');
     if (review.userId !== userId)
@@ -81,7 +81,7 @@ export class ReviewService {
     });
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: number, userId: number) {
     const review = await this.prisma.review.findUnique({ where: { id } });
     if (!review) throw new NotFoundException('Review not found');
     if (review.userId !== userId)

@@ -4,11 +4,21 @@ import Link from "next/link";
 import React, { useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
 import { Checkbox } from "../FormElements/checkbox";
+import { fetchMe, useLoginMutation } from "@/apis/auth";
+import { toast } from "react-toastify";
+import { setAuthCredentials } from "@/utils/auth-utils";
+import { useAtom } from "jotai";
+import { userAtomIt } from "@/store/userAtom";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SigninWithPassword() {
+  const { mutate: login, isPending, error } = useLoginMutation();
+  const [user, setUser] = useAtom(userAtomIt);
+  const queryClient = useQueryClient();
+
   const [data, setData] = useState({
-    email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
-    password: process.env.NEXT_PUBLIC_DEMO_USER_PASS || "",
+    email: "",
+    password: "",
     remember: false,
   });
 
@@ -23,9 +33,36 @@ export default function SigninWithPassword() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const { email, password } = data;
 
     // You can remove this code block
     setLoading(true);
+
+    login(
+      {
+        email,
+        password,
+      },
+      {
+        onSuccess: async (data: any) => {
+          if (data?.token) {
+            setAuthCredentials(data?.token, "", "");
+
+            try {
+              // 🔁 Fetch user data after login
+              const me = await queryClient.fetchQuery({
+                queryKey: ["me"],
+                queryFn: fetchMe,
+              });
+
+              setUser(me); // ✅ Store in Jotai
+            } catch (err) {
+              console.error("Failed to fetch me:", err);
+            }
+          }
+        },
+      },
+    );
 
     setTimeout(() => {
       setLoading(false);

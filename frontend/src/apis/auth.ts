@@ -11,9 +11,9 @@ export const useSignupMutation = () => {
 
   return useMutation({
     mutationFn: client.auth.signup,
-    onSuccess: () => {
-      toast.success("Signup successful");
-      router.push("/verify-otp"); // update if your flow is different
+    onSuccess: (data) => {
+      toast.success(data?.message || "Signup Successful");
+      // router.push("/verify-otp");
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? "Signup failed");
@@ -29,13 +29,14 @@ export const useLoginMutation = () => {
     mutationFn: client.auth.login,
     onSuccess: () => {
       toast.success("Login successful");
-      router.push("/dashboard"); // adjust as needed
+      router.push("/"); // adjust as needed
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? "Login failed");
     },
   });
 };
+export const fetchMe = () => client.users.me("");
 
 // VERIFY OTP
 export const useVerifyOtpMutation = () => {
@@ -45,7 +46,7 @@ export const useVerifyOtpMutation = () => {
     mutationFn: client.auth.verifyOtp,
     onSuccess: () => {
       toast.success("OTP verified");
-      router.push("/dashboard"); // or wherever you redirect
+      router.push("/auth/sign-in"); // or wherever you redirect
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? "Verification failed");

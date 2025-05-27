@@ -14,7 +14,7 @@ export default function SignUp() {
         </div>
         <span className="block h-px w-full bg-stroke dark:bg-dark-3"></span>
       </div> */}
-      <h2 className="mb-5 text-[26px] font-bold leading-[30px] text-dark dark:text-white">
+      <h2 className="mb-5 text-[26px] font-bold leading-[30px] text-dark">
         Sign Up
       </h2>
 

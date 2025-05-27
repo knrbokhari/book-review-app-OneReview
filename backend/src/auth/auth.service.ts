@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import {
   BadRequestException,
@@ -26,6 +27,40 @@ export class AuthService {
 
   async signup(dto: SignupDto) {
     const hashedPassword: any = await bcrypt.hash(dto.password, 10);
+    const existingUser = await this.prisma.authUser.findUnique({
+      where: { email: dto.email },
+    });
+
+    if (existingUser && existingUser?.isVerified) {
+      throw new BadRequestException('Email already exists');
+    }
+
+    const existingUsername = await this.prisma.authUser.findUnique({
+      where: {
+        username: dto.username,
+      },
+    });
+
+    if (existingUsername && existingUsername?.id !== existingUser?.id) {
+      throw new BadRequestException('Username already exists');
+    }
+
+    if (existingUser && !existingUser?.isVerified) {
+      await this.prisma.validation.create({
+        data: {
+          authUserId: existingUser.id,
+          code: '123456',
+          type: 'EMAIL_VERIFY',
+          otpExpiry: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+        },
+      });
+
+      return {
+        success: true,
+        message: 'Signup successful. Please verify your email with the OTP.',
+      };
+    }
+
     const authUser = await this.prisma.authUser.create({
       data: {
         username: dto.username,
@@ -36,6 +71,7 @@ export class AuthService {
           create: {
             username: dto.username,
             email: dto.email,
+            role_id: 1,
           },
         },
       },
@@ -43,11 +79,12 @@ export class AuthService {
     });
 
     // Generate OTP
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit OTP
+    // const otpCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit OTP
+    // otpCode;
     await this.prisma.validation.create({
       data: {
         authUserId: authUser.id,
-        code: otpCode,
+        code: '123456',
         type: 'EMAIL_VERIFY',
         otpExpiry: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
       },
@@ -55,6 +92,7 @@ export class AuthService {
 
     // TODO: send OTP via email
     return {
+      success: true,
       message: 'Signup successful. Please verify your email with the OTP.',
     };
   }
@@ -64,7 +102,7 @@ export class AuthService {
       where: { email: dto.email },
       include: { user: true },
     });
-
+    console.log(authUser);
     if (!authUser || !(await bcrypt.compare(dto.password, authUser.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -81,7 +119,7 @@ export class AuthService {
     };
     const accessToken = this.jwtService.sign(payload);
 
-    return { accessToken };
+    return { token: accessToken };
   }
 
   async verifyOtp(dto: VerifyOtpDto) {
@@ -96,7 +134,7 @@ export class AuthService {
         authUserId: authUser.id,
         code: dto.otp,
         type: 'EMAIL_VERIFY',
-        isUsed: false,
+        // isUsed: false,
       },
     });
 
@@ -114,7 +152,7 @@ export class AuthService {
       data: { isUsed: true },
     });
 
-    return { message: 'Email verified successfully' };
+    return { status: true, message: 'Email verified successfully' };
   }
 
   async forgotPassword(dto: ForgotPasswordDto) {
@@ -186,5 +224,38 @@ export class AuthService {
     });
 
     return { message: 'Password changed successfully' };
+  }
+
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({ where: { email } });
+
+    const authUser = await this.prisma.authUser.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        username: true,
+        password: true,
+        role: true,
+        isVerified: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            email: true,
+            role_id: true,
+          },
+        },
+      },
+    });
+
+    if (!user || !authUser) {
+      return null;
+    }
+
+    if (user && (await bcrypt.compare(password, authUser.password))) {
+      return authUser;
+    }
+    return null;
   }
 }

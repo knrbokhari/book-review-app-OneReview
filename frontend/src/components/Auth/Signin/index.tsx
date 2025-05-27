@@ -5,6 +5,9 @@ import SigninWithPassword from "../SigninWithPassword";
 export default function Signin() {
   return (
     <>
+      <h2 className="mb-8 text-[26px] font-bold leading-[30px] text-dark">
+        Sign In
+      </h2>
       <GoogleSigninButton text="Sign in" />
 
       <div className="my-6 flex items-center justify-center">

@@ -14,7 +14,6 @@ import {
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
-// import { any } from 'express';
 
 @Controller('reviews')
 export class ReviewController {
@@ -37,14 +36,14 @@ export class ReviewController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.reviewService.findOne(id);
   }
 
   // @UseGuards(AuthGuard)
   @Put(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() dto: UpdateReviewDto,
     @Req() req: any,
   ) {
@@ -54,7 +53,7 @@ export class ReviewController {
 
   // @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: any) {
+  remove(@Param('id') id: number, @Req() req: any) {
     const userId = req.user.id;
     return this.reviewService.remove(id, userId);
   }

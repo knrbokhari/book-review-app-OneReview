@@ -20,6 +20,8 @@ import { ModalProvider } from "@/components/ui/modal/modal.context";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ManagedModal from "@/components/ui/modal/managed-modal";
+import PrivateRoute from "@/utils/private-route";
+import PrivateAdminRoute from "@/utils/private-admin-route";
 
 export default function RootLayout({ children }: PropsWithChildren) {
   const pathname = usePathname();
@@ -28,7 +30,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   const isDashboardRoute = pathname.startsWith("/dashboard");
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning={false}>
       <body>
         <ModalProvider>
           <QueryProvider>
@@ -36,29 +38,35 @@ export default function RootLayout({ children }: PropsWithChildren) {
               <NextTopLoader color="#5750F1" showSpinner={false} />
 
               {isAdminRoute ? (
-                <div className="flex min-h-screen">
-                  <Sidebar />
+                <PrivateRoute>
+                  <PrivateAdminRoute>
+                    <div className="flex min-h-screen">
+                      <Sidebar />
 
-                  <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                    <Header />
+                      <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                        <Header />
 
-                    <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                      {children}
-                    </main>
-                  </div>
-                </div>
+                        <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
+                          {children}
+                        </main>
+                      </div>
+                    </div>
+                  </PrivateAdminRoute>
+                </PrivateRoute>
               ) : isDashboardRoute ? (
-                <div className="flex min-h-screen">
-                  <DashboardSidebar />
+                <PrivateRoute>
+                  <div className="flex min-h-screen">
+                    <DashboardSidebar />
 
-                  <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
-                    <Header />
+                    <div className="w-full bg-gray-2 dark:bg-[#020d1a]">
+                      <Header />
 
-                    <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
-                      {children}
-                    </main>
+                      <main className="isolate mx-auto w-full max-w-screen-2xl overflow-hidden p-4 md:p-6 2xl:p-10">
+                        {children}
+                      </main>
+                    </div>
                   </div>
-                </div>
+                </PrivateRoute>
               ) : (
                 <div className="flex min-h-screen">
                   <div className="w-full bg-gray-2 dark:bg-[#020d1a]">

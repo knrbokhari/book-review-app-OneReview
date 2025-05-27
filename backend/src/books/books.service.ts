@@ -1,3 +1,5 @@
+/* eslint-disable no-unsafe-optional-chaining */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -27,6 +29,91 @@ export class BooksService {
         },
       },
     });
+  }
+
+  async createMany() {
+    const predata = [
+      {
+        title: 'Discipline Equals Freedom',
+        author: 'Jocko Willink',
+        publisher: "St. Martin's Press",
+        rating: 4.8,
+        image:
+          'https://ejanani.sgp1.cdn.digitaloceanspaces.com/discipline-equals-freedom.jpg',
+        price: '17.49',
+        description: 'Field Manual for mental and physical toughness.',
+        category: ['Motivational', 'Fitness', 'Self-Help'],
+      },
+    ];
+
+    for (const book of predata) {
+      const formattedData: any = {
+        name: book.title,
+        slug: toSnakeCase(book?.title), // you can change this
+        summary: book.description,
+        price: parseFloat(book?.price || '0'),
+        image: book.image,
+        ratings: book.rating,
+        tags: [], // Empty array as not provided
+        gallery: [], // Empty array as not provided
+        status: 'published', // You can adjust this
+      };
+
+      // Find Author
+      const author = await this.prisma.authors.findFirst({
+        where: { name: book.author },
+      });
+      if (author) {
+        formattedData.author = {
+          connect: { id: author.id },
+        };
+      }
+
+      // Find Publication
+      const publication = await this.prisma.publication.findFirst({
+        where: { name: book.publisher },
+      });
+      if (publication) {
+        formattedData.publication = {
+          connect: { id: publication.id },
+        };
+      }
+
+      // Find and connect Categories
+      const categoryConnections: any = [];
+      for (const cat of book?.category || []) {
+        const category = await this.prisma.categories.findFirst({
+          where: { name: cat },
+        });
+        if (category) {
+          categoryConnections.push({ id: category.id });
+        }
+      }
+
+      // Create Book
+      await this.prisma.book.create({
+        data: {
+          name: formattedData.name,
+          slug: formattedData.slug,
+          summary: formattedData.summary,
+          price: formattedData.price,
+          image: formattedData.image,
+          ratings: formattedData.ratings,
+          tags: formattedData.tags,
+          gallery: formattedData.gallery,
+          status: formattedData.status,
+          authorId: formattedData?.author?.connect?.id || null,
+          publicationId: formattedData?.publication?.connect?.id || null,
+          categories: {
+            connect: formattedData?.categories?.length
+              ? formattedData?.categories?.map((c) => ({ id: c.id }))
+              : [],
+          },
+        },
+      });
+    }
+
+    return;
   }
 
   async findAll(page = 1, limit = 10) {
@@ -89,7 +176,7 @@ export class BooksService {
     const book = await this.prisma.book.findUnique({
       where: { id },
       include: {
-        // authors: true,
+        author: true,
         categories: true,
         publication: true,
       },

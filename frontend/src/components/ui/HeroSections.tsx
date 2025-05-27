@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Search, BookOpen, Star, Library, BookMarked } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function BookReviewHero() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,12 +48,14 @@ export default function BookReviewHero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
-              <button
-                className="rounded-full bg-sky-500 px-8 py-3 font-medium text-white transition-colors hover:bg-sky-600"
-                style={{ backgroundColor: "#13abfd" }}
-              >
-                Create Account
-              </button>
+              <Link href="/auth/sign-up">
+                <button
+                  className="rounded-full bg-sky-500 px-8 py-3 font-medium text-white transition-colors hover:bg-sky-600"
+                  style={{ backgroundColor: "#13abfd" }}
+                >
+                  Create Account
+                </button>
+              </Link>
               <button className="rounded-full border border-sky-300 bg-transparent px-8 py-3 font-medium text-white transition-colors hover:bg-white/10">
                 Browse Books
               </button>

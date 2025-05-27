@@ -1,26 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { ReactElement, ReactNode } from "react";
 import { renderStars } from "@/lib/renderStars";
 import { BookOpen, Clock, CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { useAddToLibraryMutation } from "@/apis/my-library";
 
-export default function BookDetails() {
-  // Sample book data
-  const book = {
-    title: "The 7 Habits of Highly Effective People",
-    author: "Stephen R. Covey",
-    publisher: "Free Press",
-    rating: 4.6,
-    coverImage: "/images/home/book1.jpg",
-    price: "$14.99",
-    description: "Powerful Lessons in Personal Change.",
-    totalReviews: 12467,
-    pages: 304,
-    summary:
-      "Between life and death there is a library, and within that library, the shelves go on forever. Every book provides a chance to try another life you could have lived. Would you have done anything different, if you had the chance to undo your regrets? A dazzling novel about all the choices that go into a life well lived.",
-    genres: ["Fiction", "Fantasy", "Contemporary"],
-  };
+const BookDetails = ({ book }: any) => {
+  const { mutate: addTo, data, isPending } = useAddToLibraryMutation();
 
   // Reading status options
   const readingStatuses = [
@@ -45,8 +32,8 @@ export default function BookDetails() {
           <div className="relative">
             <img
               className="max-h-96 w-full rounded-lg object-cover shadow-md"
-              src={book.coverImage}
-              alt={book.title}
+              src={book?.image}
+              alt={book?.title}
             />
           </div>
         </div>
@@ -55,20 +42,20 @@ export default function BookDetails() {
         <div className="md:w-2/3">
           {/* Title and basic info */}
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {book.title}
+            {book?.name}
           </h1>
           <div className="mt-2 text-lg text-gray-600 dark:text-white">
-            by {book.author}
+            by {book?.author?.name}
           </div>
 
           <div className="mt-4 flex items-center dark:text-white">
-            <div className="flex">{renderStars(book.rating)}</div>
+            <div className="flex">{renderStars(book?.ratings)}</div>
             <span className="ml-2 text-gray-700 dark:text-white">
-              {book.rating}
+              {book?.ratings}
             </span>
             <span className="mx-2 text-gray-400 dark:text-white">•</span>
             <span className="text-gray-700 dark:text-white">
-              {book.totalReviews.toLocaleString()} reviews
+              {book?.totalReviews?.toLocaleString()} reviews
             </span>
           </div>
 
@@ -80,18 +67,18 @@ export default function BookDetails() {
 
           {/* Genres */}
           <div className="mt-4 flex flex-wrap gap-2">
-            {book.genres.map((genre) => (
+            {book?.categories?.map((genre: any) => (
               <span
-                key={genre}
+                key={genre?.id}
                 className="[#2BB5FF] rounded-full bg-[#2bb5ff98] px-3 py-1 text-sm text-white"
               >
-                {genre}
+                {genre?.name}
               </span>
             ))}
           </div>
 
           {/* Reading status selection */}
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <h3 className="mb-3 text-lg font-medium text-gray-900 dark:text-white">
               Reading Status
             </h3>
@@ -111,7 +98,7 @@ export default function BookDetails() {
                 </button>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Summary */}
           <div className="mt-6">
@@ -119,13 +106,17 @@ export default function BookDetails() {
               Summary
             </h3>
             <p className="leading-relaxed text-gray-700 dark:text-white">
-              {book.summary}
+              {book?.summary ||
+                "Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem asperiores ipsa culpa id quas! Debitis, tenetur maxime! Quaerat non neque exercitationem, repellat quis perferendis a quos adipisci dignissimos odit quia?"}
             </p>
           </div>
 
           {/* Call to Action */}
           <div className="mt-8 flex flex-wrap gap-4">
-            <button className="rounded-md bg-[#2BB5FF] px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700">
+            <button
+              onClick={() => addTo({ bookId: book?.id })}
+              className="rounded-md bg-[#2BB5FF] px-6 py-3 font-medium text-white transition-colors hover:bg-indigo-700"
+            >
               Add to Library
             </button>
           </div>
@@ -133,4 +124,6 @@ export default function BookDetails() {
       </div>
     </div>
   );
-}
+};
+
+export default BookDetails;

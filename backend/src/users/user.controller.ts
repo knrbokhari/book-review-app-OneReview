@@ -13,7 +13,8 @@ export class UserController {
 
   @Get('me')
   getMe(@CurrentUser() user: any) {
-    return this.userService.getMe(user.sub);
+    console.log(user);
+    return this.userService.getMe(+user?.id);
   }
 
   @Patch('update')

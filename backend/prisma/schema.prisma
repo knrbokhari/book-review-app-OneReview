@@ -15,7 +15,7 @@ enum Actions {
 }
 
 model AuthUser {
-  id       String @id @default(uuid())
+  id       Int    @id @default(autoincrement())
   username String @unique
   email    String @unique
   password String // hashed password
@@ -29,15 +29,15 @@ model AuthUser {
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @unique
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?  @unique
 
   loginHistory LoginHistory[]
   validations  Validation[]
 }
 
 model User {
-  id              String   @id @default(uuid())
+  id              Int      @id @default(autoincrement())
   username        String   @unique
   email           String   @unique
   profileImageUrl String?
@@ -47,17 +47,18 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  authUser AuthUser?
-  role     Roles?    @relation(fields: [role_id], references: [id])
-  role_id  Int?
-  Review   Review[]
-  Comment  Comment[]
-  Like     Like[]
+  authUser  AuthUser?
+  role      Roles?      @relation(fields: [role_id], references: [id])
+  role_id   Int?
+  Review    Review[]
+  Comment   Comment[]
+  Like      Like[]
+  MyLibrary MyLibrary[]
 }
 
 model LoginHistory {
-  id         String   @id @default(uuid())
-  authUserId String
+  id         Int      @id @default(autoincrement())
+  authUserId Int
   authUser   AuthUser @relation(fields: [authUserId], references: [id])
 
   ipAddress String
@@ -69,8 +70,8 @@ model LoginHistory {
 }
 
 model Validation {
-  id         String   @id @default(uuid())
-  authUserId String
+  id         Int      @id @default(autoincrement())
+  authUserId Int
   authUser   AuthUser @relation(fields: [authUserId], references: [id])
 
   code      String
@@ -193,14 +194,15 @@ model Book {
   ratings         Float        @default(0)
   totalReviews    Int          @default(0)
   reviews         Review[]     @relation("BookReviews")
+  MyLibrary       MyLibrary[]
 
   @@index([id, slug, price, status, createdAt])
   @@map("Products")
 }
 
 model Review {
-  id       String    @id @default(uuid())
-  userId   String
+  id       Int       @id @default(autoincrement())
+  userId   Int
   user     User      @relation(fields: [userId], references: [id])
   bookId   Int
   book     Book      @relation("BookReviews", fields: [bookId], references: [id])
@@ -218,14 +220,14 @@ model Review {
 }
 
 model Comment {
-  id     String @id @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  id     Int  @id @default(autoincrement())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
-  reviewId String?
+  reviewId Int?
   review   Review? @relation(fields: [reviewId], references: [id])
 
-  parentId String?
+  parentId Int?
   parent   Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
   replies  Comment[] @relation("CommentReplies")
 
@@ -237,15 +239,32 @@ model Comment {
 }
 
 model Like {
-  id        String   @id @default(uuid())
-  userId    String
+  id        Int      @id @default(autoincrement())
+  userId    Int
   user      User     @relation(fields: [userId], references: [id])
-  reviewId  String?
+  reviewId  Int?
   review    Review?  @relation(fields: [reviewId], references: [id])
-  commentId String?
+  commentId Int?
   comment   Comment? @relation(fields: [commentId], references: [id])
 
   createdAt DateTime @default(now())
 
   @@unique([userId, reviewId, commentId])
+}
+
+model MyLibrary {
+  id       Int     @id @default(autoincrement())
+  userId   Int
+  user     User    @relation(fields: [userId], references: [id])
+  bookId   Int
+  book     Book    @relation(fields: [bookId], references: [id])
+  status   String  @default("reading") // reading, completed, want to read
+  progress Int     @default(0) // percentage of book read
+  rating   Int? // user rating for the book
+  review   String? // user review for the book
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, bookId])
 }

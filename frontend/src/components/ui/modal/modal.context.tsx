@@ -55,8 +55,6 @@ export const ModalProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
   const [state, dispatch] = useReducer(modalReducer, initialState);
 
-  console.log(state);
-
   return (
     <ModalStateContext.Provider value={state}>
       <ModalActionContext.Provider value={dispatch}>

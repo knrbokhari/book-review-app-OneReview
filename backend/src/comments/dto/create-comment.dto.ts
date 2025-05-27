@@ -6,9 +6,9 @@ export class CreateCommentDto {
 
   @IsOptional()
   @IsUUID()
-  parentId?: string;
+  parentId?: number;
 
   @IsOptional()
   @IsUUID()
-  reviewId?: string;
+  reviewId?: number;
 }

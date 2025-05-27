@@ -203,10 +203,16 @@ export const NAV_DASHBOARD = [
   {
     label: "User Dashboard",
     items: [
+      // {
+      //   title: "Dashboard",
+      //   icon: Icons.HomeIcon,
+      //   url: "/dashboard",
+      //   items: [],
+      // },
       {
-        title: "Dashboard",
-        icon: Icons.HomeIcon,
-        url: "/dashboard",
+        title: "Profile",
+        url: "/dashboard/profile",
+        icon: Icons.User,
         items: [],
       },
       {
@@ -221,12 +227,7 @@ export const NAV_DASHBOARD = [
         url: "/dashboard/reviews",
         items: [],
       },
-      {
-        title: "Profile",
-        url: "/dashboard/profile",
-        icon: Icons.User,
-        items: [],
-      },
+
       {
         title: "Change Password",
         icon: Icons.Lock,

@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-// import Router from "next/router";
 
 const Axios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_REST_API_ENDPOINT,

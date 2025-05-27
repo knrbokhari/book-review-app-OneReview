@@ -10,6 +10,7 @@ import { AuthorsModule } from './authors/authors.module';
 import { BooksModule } from './books/books.module';
 import { CommentsModule } from './comments/comments.module';
 import { ReviewModule } from './review/review.module';
+import { MyLibraryModule } from './my-library/my-library.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ReviewModule } from './review/review.module';
     BooksModule,
     CommentsModule,
     ReviewModule,
+    MyLibraryModule,
   ],
   controllers: [],
   providers: [PrismaService],
