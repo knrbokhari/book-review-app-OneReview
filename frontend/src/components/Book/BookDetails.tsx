@@ -49,6 +49,7 @@ const BookDetails = ({ book }: any) => {
           </h1>
           <div className="mt-2 text-lg text-gray-600 dark:text-white">
             by {book?.author?.name}
+            {console.log(book)}
           </div>
 
           <div className="mt-4 flex items-center dark:text-white">

@@ -192,17 +192,18 @@ export class BooksService {
     return this.prisma.book.update({
       where: { id },
       data: {
-        ...rest,
-        ...(author && {
-          authors: {
-            set: author.map((id) => ({ id })),
-          },
-        }),
-        ...(categories && {
-          categories: {
-            set: categories.map((id) => ({ id })),
-          },
-        }),
+        // ...rest,
+        image: data.image,
+        name: data.name,
+        ratings: parseFloat(data?.ratings),
+        page: Number(rest.page),
+        price: Number(rest.price),
+        slug: toSnakeCase(rest.name),
+        authorId: author?.id || null,
+        publicationId: data?.publisher?.id || null,
+        categories: {
+          set: categories.map((c) => ({ id: c.id })),
+        },
       },
     });
   }

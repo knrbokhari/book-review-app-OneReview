@@ -22,15 +22,15 @@ export class CreateAuthorDto {
   @IsString()
   bio?: string;
 
-  @IsOptional()
-  @IsString()
-  quote?: string;
+  // @IsOptional()
+  // @IsString()
+  // quote?: string;
 
-  @IsOptional()
-  @IsString()
-  born?: string;
+  // @IsOptional()
+  // @IsString()
+  // born?: string;
 
-  @IsOptional()
-  @IsString()
-  death?: string;
+  // @IsOptional()
+  // @IsString()
+  // death?: string;
 }

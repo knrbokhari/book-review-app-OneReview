@@ -88,6 +88,8 @@ const BookForm = ({ initialValues }: IProps) => {
       } else {
         await updateBook({
           ...value,
+          price: `${value.price}`,
+          ratings: `${value.price}`,
           id: initialValues.id!,
         });
       }
