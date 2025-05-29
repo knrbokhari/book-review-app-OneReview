@@ -10,29 +10,42 @@ import {
   Query,
   Req,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 
 @Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  // @UseGuards(AuthGuard)
+  @UseGuards(JwtGuard)
   @Post()
-  create(@Body() dto: CreateReviewDto, @Req() req: any) {
-    const userId = req.user.id;
+  create(@Body() dto: CreateReviewDto, @CurrentUser() user: any) {
+    const userId = user.id;
+
     return this.reviewService.create(userId, dto);
   }
 
   @Get()
   findAll(
+    @CurrentUser() user: any,
+    @Query('page', ParseIntPipe) page = 1,
+    @Query('limit', ParseIntPipe) limit = 10,
+  ) {
+    return this.reviewService.findAll(user?.id, page, limit);
+  }
+
+  @Get('/user')
+  findAllUser(
     @Query('bookId') bookId?: number,
     @Query('page', ParseIntPipe) page = 1,
     @Query('limit', ParseIntPipe) limit = 10,
   ) {
-    return this.reviewService.findAll(bookId, page, limit);
+    return this.reviewService.findAll(Number(bookId), page, limit);
   }
 
   @Get(':id')

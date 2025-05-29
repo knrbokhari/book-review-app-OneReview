@@ -46,7 +46,7 @@ const page = () => {
           totalReviews={book?.total_reviews}
           ratings={book?.ratings}
         />
-        <ProductReviews productId={book?.id} productType={book?.type?.slug} />
+        <ProductReviews product={book} />
         {/* </Element> */}
       </div>
     </div>

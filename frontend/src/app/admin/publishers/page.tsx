@@ -1,8 +1,13 @@
 "use client";
 
-import { usePublisherListQuery } from "@/apis/publisher";
+import {
+  useDeletePublisherMutation,
+  usePublisherListQuery,
+} from "@/apis/publisher";
 import { TrashIcon } from "@/assets/icons";
 import Button from "@/components/ui/button";
+import CustomModal from "@/components/ui/modal/common-modal";
+import ConfirmationCard from "@/components/ui/modal/confirmation-modal";
 import { useModalAction } from "@/components/ui/modal/modal.context";
 import Pagination from "@/components/ui/pagination";
 import { Loader } from "@/components/ui/spinner/spinner";
@@ -29,6 +34,17 @@ const page = () => {
     limit: 20,
     page,
   });
+  const [item, setDeleteItem] = useState<any>(null);
+  const { mutate: deleteItem, isPending: deleting } =
+    useDeletePublisherMutation();
+
+  async function handleDelete() {
+    try {
+      deleteItem(item?.id as string);
+      setDeleteItem(null);
+    } catch (error) {}
+  }
+
   function handlePagination(current: number) {
     setPage(current);
   }
@@ -103,8 +119,9 @@ const page = () => {
                     </button>
 
                     <button
-                      onClick={() =>
-                        openModal("DELETE_PUBLISHER_VIEW", item?.id)
+                      onClick={
+                        () => setDeleteItem(item)
+                        // openModal("DELETE_PUBLISHER_VIEW", item?.id)
                       }
                       className="text-red-500 hover:text-red-700"
                     >
@@ -129,6 +146,19 @@ const page = () => {
           )}
         </div>
       </div>
+      <CustomModal
+        isOpen={item?.id}
+        onClose={() => setDeleteItem(null)}
+        size="md"
+        title="Delete Publication"
+        variant="default"
+      >
+        <ConfirmationCard
+          onCancel={() => setDeleteItem(null)}
+          onDelete={handleDelete}
+          deleteBtnLoading={loading}
+        />
+      </CustomModal>
     </div>
   );
 };

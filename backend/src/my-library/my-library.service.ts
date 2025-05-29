@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 // import { CreateMyLibraryDto } from './dto/create-my-library.dto';
 // import { UpdateMyLibraryDto } from './dto/update-my-library.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -10,10 +14,19 @@ export class MyLibraryService {
   constructor(private prisma: PrismaService) {}
 
   async addToLibrary(dto: any) {
+    const existing = await this.prisma.myLibrary.findUnique({
+      where: { userId_bookId: { userId: dto?.userId, bookId: dto?.bookId } },
+    });
+
+    if (existing) {
+      throw new BadRequestException('Book already exists in your library');
+    }
+
     return await this.prisma.myLibrary.create({
       data: {
         userId: dto?.userId,
         bookId: dto?.bookId,
+        status: 'Want to Read',
       },
     });
   }
@@ -30,11 +43,34 @@ export class MyLibraryService {
     });
   }
 
-  async getAll(userId: number) {
-    return await this.prisma.myLibrary.findMany({
-      where: { userId },
-      include: { book: true },
-    });
+  async getAll(userId: number, page = 1, limit = 10) {
+    console.log(userId, page, limit);
+    try {
+      const skip = (page - 1) * limit;
+      const [data, total] = await Promise.all([
+        this.prisma.myLibrary.findMany({
+          where: { userId },
+          skip,
+          take: limit,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            book: true,
+          },
+        }),
+        this.prisma.myLibrary.count({
+          where: { userId },
+        }),
+      ]);
+
+      return { data, total, page, limit };
+    } catch (error) {
+      console.log(error);
+    }
+
+    // return await this.prisma.myLibrary.findMany({
+    //   where: { userId },
+    //   // include: { book: true },
+    // });
   }
 
   async remove(userId: number, bookId: number) {

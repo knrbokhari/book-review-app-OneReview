@@ -26,8 +26,12 @@ export class ReviewService {
 
     return this.prisma.review.create({
       data: {
-        ...dto,
-        userId,
+        userId: userId,
+        bookId: dto.bookId,
+        content: dto.content,
+        isPublic: true,
+        rating: dto.rating,
+        title: 'N/A',
       },
     });
   }
@@ -36,6 +40,29 @@ export class ReviewService {
     const skip = (page - 1) * limit;
 
     const where = bookId ? { bookId } : {};
+    const [data, total] = await Promise.all([
+      this.prisma.review.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: true,
+          book: true,
+          likes: true,
+          comments: true,
+        },
+      }),
+      this.prisma.review.count({ where }),
+    ]);
+
+    return { data, total, page, limit };
+  }
+
+  async findAllUser(userId?: number, page = 1, limit = 10) {
+    const skip = (page - 1) * limit;
+
+    const where = userId ? { userId } : {};
     const [data, total] = await Promise.all([
       this.prisma.review.findMany({
         where,

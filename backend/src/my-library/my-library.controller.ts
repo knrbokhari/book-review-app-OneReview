@@ -4,11 +4,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Query,
   UseGuards,
+  ParseIntPipe,
+  DefaultValuePipe,
+  Put,
 } from '@nestjs/common';
 import { MyLibraryService } from './my-library.service';
 import { CreateMyLibraryDto } from './dto/create-my-library.dto';
@@ -16,17 +18,17 @@ import { UpdateMyLibraryDto } from './dto/update-my-library.dto';
 import { JwtGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 
+@UseGuards(JwtGuard)
 @Controller('my-library')
 export class MyLibraryController {
   constructor(private readonly service: MyLibraryService) {}
 
-  @UseGuards(JwtGuard)
   @Post()
   addToLibrary(@CurrentUser() user: any, @Body() dto: CreateMyLibraryDto) {
     return this.service.addToLibrary({ ...dto, userId: user?.id });
   }
 
-  @Patch(':userId/:bookId')
+  @Put(':userId/:bookId')
   updateStatus(
     @Param('userId') userId: number,
     @Param('bookId') bookId: number,
@@ -34,10 +36,16 @@ export class MyLibraryController {
   ) {
     return this.service.updateStatus(+userId, +bookId, dto);
   }
+  // @Query('userId') userId: number
 
   @Get()
-  getAll(@Query('userId') userId: number) {
-    return this.service.getAll(+userId);
+  getAll(
+    @CurrentUser() user: any,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    console.log(user);
+    return this.service.getAll(+user?.id, page, limit);
   }
 
   @Delete(':userId/:bookId')

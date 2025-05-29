@@ -56,9 +56,11 @@ export default function BookReviewHero() {
                   Create Account
                 </button>
               </Link>
-              <button className="rounded-full border border-sky-300 bg-transparent px-8 py-3 font-medium text-white transition-colors hover:bg-white/10">
-                Browse Books
-              </button>
+              <Link href="/book">
+                <button className="rounded-full border border-sky-300 bg-transparent px-8 py-3 font-medium text-white transition-colors hover:bg-white/10">
+                  Browse Books
+                </button>
+              </Link>
             </div>
           </div>
 

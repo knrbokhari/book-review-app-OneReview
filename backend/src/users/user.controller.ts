@@ -13,7 +13,6 @@ export class UserController {
 
   @Get('me')
   getMe(@CurrentUser() user: any) {
-    console.log(user);
     return this.userService.getMe(+user?.id);
   }
 

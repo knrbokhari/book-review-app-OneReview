@@ -258,7 +258,7 @@ model MyLibrary {
   user     User    @relation(fields: [userId], references: [id])
   bookId   Int
   book     Book    @relation(fields: [bookId], references: [id])
-  status   String  @default("reading") // reading, completed, want to read
+  status   String  @default("Want to Read") // Currently Reading, Completed, Want to Read
   progress Int     @default(0) // percentage of book read
   rating   Int? // user rating for the book
   review   String? // user review for the book

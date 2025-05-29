@@ -86,3 +86,23 @@ export const useReviewListQuery = (options: Record<string, any> = {}) => {
     loading: isLoading,
   };
 };
+
+export const useReviewListUserQuery = (options: Record<string, any> = {}) => {
+  const { data, error, isLoading } = useQuery<any, Error>({
+    queryKey: ["reviews", options],
+    queryFn: ({ queryKey }) => client.reviews.getAllUser(queryKey[1]),
+  });
+
+  return {
+    reviews: data?.data ?? [],
+    paginatorInfo: {
+      total: data?.total,
+      limit: data?.limit,
+      pages: Math.ceil(data?.total / data?.limit),
+      currentPage: data?.page || 1,
+      perPage: data?.limit || 10,
+    },
+    error,
+    loading: isLoading,
+  };
+};

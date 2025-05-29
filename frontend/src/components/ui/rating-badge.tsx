@@ -29,12 +29,12 @@ const RatingsBadge: React.FC<RatingProps> = ({
       )}
       {...props}
     >
-      {rating}
+      {rating}{" "}
       <StarIcon
         className={cn({
-          "h-2.5 w-2.5 ltr:ml-1 rtl:mr-1": variant === "xs",
-          "h-3 w-3 ltr:ml-1.5 rtl:mr-1.5": variant === "small",
-          "h-6 w-6 ltr:ml-2 rtl:mr-2": variant === "large",
+          "ml-1 h-2.5 w-2.5 ltr:ml-1 rtl:mr-1": variant === "xs",
+          "ml-1 h-3 w-3 ltr:ml-1.5 rtl:mr-1.5": variant === "small",
+          "ml-1 h-6 w-6 ltr:ml-2 rtl:mr-2": variant === "large",
         })}
       />
     </span>

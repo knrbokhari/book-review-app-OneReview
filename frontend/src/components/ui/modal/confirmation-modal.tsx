@@ -41,7 +41,7 @@ const ConfirmationCard: React.FC<ConfirmationCardProps> = ({
           <p className="mt-4 text-xl font-bold text-black dark:text-white">
             {title}
           </p>
-          <p className="px-6 py-2 text-black dark:text-white">?{description}</p>
+          <p className="px-6 py-2 text-black dark:text-white">{description}?</p>
           <div className="space-s-4 mt-8 flex w-full items-center justify-between gap-2">
             <div className="w-1/2">
               <Button

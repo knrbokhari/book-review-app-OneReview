@@ -15,7 +15,7 @@ const HomeHeader = () => {
 
   const navItems = [
     { name: "Home", icon: <Home size={20} />, href: "/" },
-    { name: "Browse Books", icon: <Book size={20} />, href: "/" },
+    { name: "Browse Books", icon: <Book size={20} />, href: "/book" },
     { name: "Club", icon: <Book size={20} />, href: "/" },
     // { name: "Reviews", icon: <Star size={20} />, href: "/" },
     // { name: "Authors", icon: <Users size={20} />, href: "/" },
@@ -49,7 +49,7 @@ const HomeHeader = () => {
             {navItems.map((item) => (
               <li key={item.name}>
                 <Link
-                  href="#"
+                  href={item?.href}
                   className="flex items-center gap-1 font-medium text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
                 >
                   {item.name}

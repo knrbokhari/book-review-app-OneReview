@@ -1,5 +1,8 @@
+"use client";
+
+import { useReviewListUserQuery } from "@/apis/reviews";
 import { TrashIcon } from "@/assets/icons";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import RatingsBadge from "@/components/ui/rating-badge";
 import {
   Table,
   TableBody,
@@ -9,18 +12,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import dayjs from "dayjs";
-import React from "react";
+import Pagination from "rc-pagination";
+import React, { useState } from "react";
 
 const page = () => {
-  const data = [
-    {
-      name: "naeem",
-      image: null,
-      created_at: null,
-      products_count: 0,
-      email: "@gm.cpm",
-    },
-  ];
+  const [page, setPage] = useState(1);
+
+  const { reviews, loading, paginatorInfo } = useReviewListUserQuery({
+    limit: 10,
+    page,
+  });
+
+  function handlePagination(current: number) {
+    setPage(current);
+  }
+
   return (
     <div>
       <h2 className="mb-5 text-[26px] font-bold leading-[30px] text-dark dark:text-white">
@@ -39,28 +45,32 @@ const page = () => {
           </TableHeader>
 
           <TableBody>
-            {data.map((item, index) => (
+            {reviews?.map((item: any, index: any) => (
               <TableRow
                 key={index}
                 className="border-[#eee] dark:border-dark-3"
               >
                 <TableCell className="min-w-[155px] xl:pl-7.5">
-                  <h5 className="text-dark dark:text-white">{item.name}</h5>
+                  <h5 className="text-dark dark:text-white">{item?.title}</h5>
                 </TableCell>
 
                 <TableCell className="min-w-[155px] xl:pl-7.5">
-                  <h5 className="text-dark dark:text-white">{item.email}</h5>
-                </TableCell>
-
-                <TableCell>
                   <h5 className="text-dark dark:text-white">
-                    {item.products_count}
+                    <RatingsBadge
+                      rating={item.rating}
+                      className="cursor-pointer pl-3 pr-2 font-bold sm:px-3"
+                      variant="small"
+                    />
                   </h5>
                 </TableCell>
 
                 <TableCell>
+                  <h5 className="text-dark dark:text-white">{item.content}</h5>
+                </TableCell>
+
+                <TableCell>
                   <p className="text-dark dark:text-white">
-                    {dayjs(item.created_at).format("MMM DD, YYYY")}
+                    {dayjs(item.created_at).format("MMM DD, YYYY h:mm A")}
                   </p>
                 </TableCell>
 
@@ -76,6 +86,17 @@ const page = () => {
             ))}
           </TableBody>
         </Table>
+
+        <div className="mt-5 flex items-center justify-end">
+          {paginatorInfo?.pages > 1 && (
+            <Pagination
+              total={paginatorInfo.total}
+              current={paginatorInfo.currentPage}
+              pageSize={paginatorInfo.perPage}
+              onChange={handlePagination}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

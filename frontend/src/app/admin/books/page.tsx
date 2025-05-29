@@ -1,8 +1,10 @@
 "use client";
 
-import { useBookListQuery } from "@/apis/book";
+import { useBookListQuery, useDeleteBookMutation } from "@/apis/book";
 import { TrashIcon } from "@/assets/icons";
 import Button from "@/components/ui/button";
+import CustomModal from "@/components/ui/modal/common-modal";
+import ConfirmationCard from "@/components/ui/modal/confirmation-modal";
 import { useModalAction } from "@/components/ui/modal/modal.context";
 import Pagination from "@/components/ui/pagination";
 import { Loader } from "@/components/ui/spinner/spinner";
@@ -25,15 +27,26 @@ const page = () => {
   const router = useRouter();
   const { openModal } = useModalAction();
   const [page, setPage] = useState(1);
+  const [item, setDeleteItem] = useState<any>(null);
   const { books, paginatorInfo, loading } = useBookListQuery({
     limit: 20,
     page,
   });
+  const { mutate: deleteBook, isPending: deleting } = useDeleteBookMutation();
+
+  async function handleDelete() {
+    try {
+      deleteBook(item?.id as string);
+      setDeleteItem(null);
+    } catch (error) {}
+  }
+
   function handlePagination(current: number) {
     setPage(current);
   }
+
   if (loading) return <Loader text="Loading..." />;
-  console.log(books);
+
   return (
     <div>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -117,15 +130,15 @@ const page = () => {
                       onClick={(e) => router.push(`/admin/books/${item?.id}`)}
                       className="text-green-500 hover:text-green-700"
                     >
-                      <span className="sr-only">View Invoice</span>
+                      <span className="sr-only">Edit</span>
                       <Edit size={18} />
                     </button>
 
                     <button
-                      onClick={() => openModal("DELETE_BOOK_VIEW", item?.id)}
+                      onClick={() => setDeleteItem(item)} // openModal("DELETE_BOOK_VIEW", item?.id)
                       className="text-red-500 hover:text-red-700"
                     >
-                      <span className="sr-only">Delete Invoice</span>
+                      <span className="sr-only">Delete</span>
                       <TrashIcon width={20} height={20} />
                     </button>
                   </div>
@@ -146,6 +159,20 @@ const page = () => {
           )}
         </div>
       </div>
+
+      <CustomModal
+        isOpen={item?.id}
+        onClose={() => setDeleteItem(null)}
+        size="md"
+        title="Delete Book"
+        variant="default"
+      >
+        <ConfirmationCard
+          onCancel={() => setDeleteItem(null)}
+          onDelete={handleDelete}
+          deleteBtnLoading={loading}
+        />
+      </CustomModal>
     </div>
   );
 };

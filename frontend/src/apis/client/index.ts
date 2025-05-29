@@ -99,6 +99,11 @@ class Client {
         ...params,
         search: HttpClient.formatSearchParams({}),
       }),
+    getAllUser: ({ ...params }: any) =>
+      HttpClient.get<any>(`/reviews/user`, {
+        ...params,
+        search: HttpClient.formatSearchParams({}),
+      }),
     getById: (id: string) => HttpClient.get<any>(`/reviews/${id}`, {}),
     create: (data: any) => HttpClient.post<any>(`reviews`, data),
     update: (data: any) => HttpClient.put<any>(`reviews/${data.id}`, data),

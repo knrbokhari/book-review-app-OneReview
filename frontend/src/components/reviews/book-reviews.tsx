@@ -6,12 +6,26 @@ import RatingsBadge from "../ui/rating-badge";
 import Spinner from "../ui/spinner/spinner";
 import Sorting from "./sorting";
 import { isEmpty } from "lodash";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useCreateReviewMutation, useReviewListQuery } from "@/apis/reviews";
+import ReviewCard from "./review-card";
+import Pagination from "../ui/pagination";
+import Button from "../ui/button";
+import CustomModal from "../ui/modal/common-modal";
+import Label from "../ui/label";
+import TextArea from "../ui/text-area";
+import RateInput from "./rate-input";
+import { Form } from "react-hook-form";
+import Image from "next/image";
+import { productPlaceholder } from "@/lib/placeholders";
+import { useForm, Controller, FormProvider } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { renderStars } from "@/lib/renderStars";
 
 type ProductReviewsProps = {
   className?: any;
-  productId: string;
-  productType?: string;
+  product: any;
 };
 
 interface Plan {
@@ -59,20 +73,25 @@ const plans: Plan[] = [
   },
 ];
 
-const ProductReviews: React.FC<ProductReviewsProps> = ({
-  productId,
-  productType,
-}) => {
+const reviewFormSchema = yup.object().shape({
+  rating: yup.number().min(1, "Rating is required").required(),
+  comment: yup.string().required("Comment is required"),
+});
+
+const ProductReviews: React.FC<ProductReviewsProps> = ({ product }) => {
   const router = useRouter();
   // const { query } = usePathname();
   // const { text, ...restQuery } = query;
   const [page, setPage] = useState(1);
-  const { reviews, isLoading, paginatorInfo }: any = {};
-  //    useReviews({
-  //     product_id: productId,
-  //     limit: 5,
-  //     page,
-  //   });
+  const [open, setOpen] = useState(false);
+  const { reviews, isLoading, paginatorInfo }: any = useReviewListQuery({
+    bookId: product?.id,
+    limit: 5,
+    page,
+  });
+
+  const { mutate: createReview, isPending: creating } =
+    useCreateReviewMutation();
 
   useEffect(() => {
     setPage(1);
@@ -102,7 +121,38 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
     return <Spinner />;
   }
 
-  const boxedLayout = ["books"].includes(productType!);
+  const methods = useForm({
+    resolver: yupResolver(reviewFormSchema),
+    defaultValues: {
+      rating: 0,
+      comment: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+  } = methods;
+
+  const onSubmit = (value: any) => {
+    createReview(
+      {
+        rating: value?.rating,
+        content: value?.comment,
+        bookId: product?.id,
+        title: product?.name,
+      },
+      {
+        onSuccess: async (data: any) => {
+          setOpen(false);
+        },
+      },
+    );
+  };
+
+  const boxedLayout = true;
 
   return (
     <div>
@@ -177,13 +227,11 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
           <h2 className="text-heading mt-3 text-lg font-semibold tracking-tight sm:mt-0">
             Reviews ({paginatorInfo?.total ?? 0})
           </h2>
-          <div className="border-border-200 flex flex-col items-center border-opacity-70 py-3 sm:space-y-1 lg:flex-row lg:space-y-0 lg:!border-0 lg:py-0 ltr:sm:border-l rtl:sm:border-r">
-            <div className="border-border-200 w-full shrink-0 border-opacity-70 lg:w-auto lg:py-5 ltr:sm:pl-8 ltr:sm:pr-5 ltr:lg:border-l rtl:sm:pl-5 rtl:sm:pr-8 rtl:lg:border-r">
+          <div className="border-border-200 flex flex-col items-center gap-2 border-opacity-70 py-3 sm:space-y-1 lg:flex-row lg:space-y-0 lg:!border-0 lg:py-0 ltr:sm:border-l rtl:sm:border-r">
+            <Button onClick={() => setOpen(true)}>Add Review</Button>
+            <div className="border-border-200 hidden w-full shrink-0 border-opacity-70 lg:block lg:w-auto lg:py-5 ltr:sm:pl-8 ltr:sm:pr-5 ltr:lg:border-l rtl:sm:pl-5 rtl:sm:pr-8 rtl:lg:border-r">
               <Sorting />
             </div>
-            {/* <div className="w-full shrink-0 border-border-200 border-opacity-70 ltr:sm:pl-8 ltr:sm:pr-5 rtl:sm:pl-5 rtl:sm:pr-8 lg:w-auto lg:py-5 ltr:lg:border-l rtl:lg:border-r">
-              <StarFilter />
-            </div> */}
           </div>
         </div>
       </div>
@@ -199,14 +247,14 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
               "mx-auto max-w-screen-xl": boxedLayout,
             })}
           >
-            {/* {reviews?.map((review: any) => (
+            {reviews?.map((review: any) => (
               <ReviewCard key={`review-no-${review?.id}`} review={review} />
-            ))} */}
+            ))}
 
-            {/* {paginatorInfo && (
+            {paginatorInfo && (
               <div className="border-border-200 flex items-center justify-between border-t border-opacity-70 py-4">
                 <div className="text-xs text-gray-400">
-                  {t("text-page")} {paginatorInfo.currentPage} {t("text-of")}{" "}
+                  Page {paginatorInfo.currentPage} Of{" "}
                   {Math.ceil(paginatorInfo.total / paginatorInfo.perPage)}
                 </div>
 
@@ -219,7 +267,7 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
                   />
                 </div>
               </div>
-            )} */}
+            )}
           </div>
         </div>
       ) : (
@@ -229,6 +277,77 @@ const ProductReviews: React.FC<ProductReviewsProps> = ({
           </h3>
         </div>
       )}
+
+      <CustomModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        size="md"
+        title="Add Review"
+        variant="default"
+      >
+        <div className="bg-light flex w-full flex-col justify-center md:rounded-xl">
+          <div className="border-border-200 flex items-center gap-2 border-b p-7">
+            <div className="flex shrink-0">
+              <Image
+                src={product?.image ? product?.image : productPlaceholder}
+                alt={product?.name}
+                width={90}
+                height={90}
+                className="inline-flex rounded bg-black"
+              />
+            </div>
+            <div className="ltr:pl-6 rtl:pr-6">
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                {product?.name}
+              </h1>
+              <div className="mt-2 text-lg text-gray-600 dark:text-white">
+                by {product?.author?.name}
+              </div>
+
+              <div className="mt-4 flex items-center dark:text-white">
+                <div className="flex">{renderStars(product?.ratings)}</div>
+                <span className="ml-2 text-gray-700 dark:text-white">
+                  {product?.ratings}
+                </span>
+                <span className="mx-2 text-gray-400 dark:text-white">•</span>
+                <span className="text-gray-700 dark:text-white">
+                  {product?.totalReviews?.toLocaleString()} reviews
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="mt-5 w-full">
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="mb-5">
+                  <Label className="mb-2">Ratings</Label>
+                  <RateInput
+                    control={control}
+                    name="rating"
+                    defaultValue={0}
+                    style={{ fontSize: 30 }}
+                    allowClear={false}
+                  />
+                </div>
+
+                <TextArea
+                  label="Comment"
+                  {...register("comment")}
+                  variant="outline"
+                  className="mb-5 w-full"
+                  error={errors.comment?.message}
+                />
+
+                <div className="mt-8">
+                  <Button type="submit" className="h-11 w-full sm:h-12">
+                    Submit
+                  </Button>
+                </div>
+              </form>
+            </FormProvider>
+          </div>
+        </div>
+      </CustomModal>
     </div>
   );
 };
